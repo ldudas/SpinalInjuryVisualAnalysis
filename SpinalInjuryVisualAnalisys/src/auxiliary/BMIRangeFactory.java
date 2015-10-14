@@ -13,12 +13,13 @@ public class BMIRangeFactory
 	private BMIRangeFactory()
 	{
 		underweight = new BMIRange(Double.MIN_VALUE,18.5);
-		normal = new BMIRange(18.5, 24.9);
-		overweight = new BMIRange(24.9, 29.9);
-		adiposity = new BMIRange(29.9, Double.MAX_VALUE);
+		normal = new BMIRange(18.5, 25);
+		overweight = new BMIRange(25, 30);
+		adiposity = new BMIRange(30, Double.MAX_VALUE);
+
 	}
 	
-	public BMIRangeFactory getInstance()
+	public static BMIRangeFactory getInstance()
 	{
 		if(instance==null)
 		{
@@ -38,5 +39,6 @@ public class BMIRangeFactory
 		default 		 : return null;
 		}
 	}
+	
 	
 }

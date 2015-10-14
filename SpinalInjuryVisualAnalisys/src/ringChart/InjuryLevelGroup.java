@@ -1,5 +1,6 @@
 package ringChart;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import auxiliary.BMIRangeName;
@@ -8,16 +9,15 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.scene.shape.Shape;
 
-public class InjuryLevelGroup
+public class InjuryLevelGroup extends ChartGroup
 {
 
 	private Map<BMIRangeName,BMIGroup> bmiGroups;
-	private RingChart ringChart;
 	private InjuryLevel injuryLevel;
 	
 	private double value;
 	
-	private Shape shape;
+	
 	private BooleanProperty shown = new BooleanPropertyBase(true) 
 	{
 
@@ -54,15 +54,17 @@ public class InjuryLevelGroup
     }
     
     
+    
+    public InjuryLevelGroup(InjuryLevel injuryLevel,RingChart ringChart)
+	{
+    	super(ringChart);
+		this.injuryLevel = injuryLevel;
+		bmiGroups = new LinkedHashMap<BMIRangeName,BMIGroup>();
+		isEmpty = true;
+	}
+    
+    
    
-	public RingChart getRingChart()
-	{
-		return ringChart;
-	}
-	public void setRingChart(RingChart ringChart)
-	{
-		this.ringChart = ringChart;
-	}
 	public InjuryLevel getInjuryLevel()
 	{
 		return injuryLevel;
@@ -78,14 +80,6 @@ public class InjuryLevelGroup
 	public void setValue(double value)
 	{
 		this.value = value;
-	}
-	public Shape getShape()
-	{
-		return shape;
-	}
-	public void setShape(Shape shape)
-	{
-		this.shape = shape;
 	}
 
 	public void setBmiGroups(Map<BMIRangeName, BMIGroup> bmiGroups)

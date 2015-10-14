@@ -1,5 +1,6 @@
 package ringChart;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import auxiliary.BMIRange;
@@ -7,14 +8,13 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
 import javafx.scene.shape.Shape;
 
-public class BMIGroup
+public class BMIGroup extends ChartGroup
 {
 
-	private List<PatientOnChart> patientsOnChart; //TODO men women
-	private RingChart ringChart;
+	private List<PatientOnChart> patientsOnChartMen; 
+	private List<PatientOnChart> patientsOnChartWomen;
 	private InjuryLevelGroup injuryLevelGroup;
 	private BMIRange bmiRange;
-	private Shape shape;
 	private BooleanProperty shown = new BooleanPropertyBase(true) 
 	{
 
@@ -51,14 +51,16 @@ public class BMIGroup
     }
     
     
-	public List<PatientOnChart> getPatientsOnChart()
+    public BMIGroup(InjuryLevelGroup injuryLevelGroup, BMIRange bmiRange, RingChart ringChart)
 	{
-		return patientsOnChart;
+    	super(ringChart);
+    	this.injuryLevelGroup = injuryLevelGroup;
+    	this.bmiRange = bmiRange;
+    	patientsOnChartMen = new LinkedList<PatientOnChart>();
+    	patientsOnChartWomen = new LinkedList<PatientOnChart>();
+    	isEmpty = true;
 	}
-	public void setPatientsOnChart(List<PatientOnChart> patientsOnChart)
-	{
-		this.patientsOnChart = patientsOnChart;
-	}
+    
 	public RingChart getRingChart()
 	{
 		return ringChart;
@@ -75,14 +77,7 @@ public class BMIGroup
 	{
 		this.injuryLevelGroup = injuryLevelGroup;
 	}
-	public Shape getShape()
-	{
-		return shape;
-	}
-	public void setShape(Shape shape)
-	{
-		this.shape = shape;
-	}
+
 	public BMIRange getBmiRange()
 	{
 		return bmiRange;
@@ -90,5 +85,29 @@ public class BMIGroup
 	public void setBmiRange(BMIRange bmiRange)
 	{
 		this.bmiRange = bmiRange;
+	}
+	public boolean isEmpty()
+	{
+		return isEmpty;
+	}
+	public void setEmpty(boolean isEmpty)
+	{
+		this.isEmpty = isEmpty;
+	}
+	public List<PatientOnChart> getPatientsOnChartMen()
+	{
+		return patientsOnChartMen;
+	}
+	public void setPatientsOnChartMen(List<PatientOnChart> patientsOnChartMen)
+	{
+		this.patientsOnChartMen = patientsOnChartMen;
+	}
+	public List<PatientOnChart> getPatientsOnChartWomen()
+	{
+		return patientsOnChartWomen;
+	}
+	public void setPatientsOnChartWomen(List<PatientOnChart> patientsOnChartWomen)
+	{
+		this.patientsOnChartWomen = patientsOnChartWomen;
 	}
 }

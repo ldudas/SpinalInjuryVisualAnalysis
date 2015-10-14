@@ -3,15 +3,13 @@ package ringChart;
 import auxiliary.Patient;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.scene.shape.Shape;
+import javafx.scene.layout.Region;
 
-public class PatientOnChart
+public class PatientOnChart extends ChartElement
 {
 
 	private Patient patient;
-	private RingChart ringChart;
 	private BMIGroup bmiGroup;
-	private Shape shape;
 	private BooleanProperty shown = new BooleanPropertyBase(true) 
 	{
 
@@ -49,22 +47,20 @@ public class PatientOnChart
 	
     
     
+    public PatientOnChart(Patient patient, BMIGroup bmiGroup, RingChart ringChart)
+	{
+    	super(ringChart);
+		this.patient = patient;
+		this.bmiGroup= bmiGroup;
+	}
+    
     public Patient getPatient()
 	{
 		return patient;
 	}
-    
 	public void setPatient(Patient patient)
 	{
 		this.patient = patient;
-	}
-	public RingChart getRingChart()
-	{
-		return ringChart;
-	}
-	public void setRingChart(RingChart ringChart)
-	{
-		this.ringChart = ringChart;
 	}
 	public BMIGroup getBmiGroup()
 	{
@@ -73,14 +69,6 @@ public class PatientOnChart
 	public void setBmiGroup(BMIGroup bmiGroup)
 	{
 		this.bmiGroup = bmiGroup;
-	}
-	public Shape getShape()
-	{
-		return shape;
-	}
-	public void setShape(Shape shape)
-	{
-		this.shape = shape;
 	}
 	
 }

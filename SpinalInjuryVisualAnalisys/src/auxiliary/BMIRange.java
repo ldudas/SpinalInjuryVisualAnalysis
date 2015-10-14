@@ -27,4 +27,10 @@ public class BMIRange
 	{
 		this.toBMI = toBMI;
 	}
+
+	@Override
+	public String toString()
+	{
+		return "BMIRange: ( " + fromBMI + ", " + toBMI + ">";
+	}
 }
