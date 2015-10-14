@@ -7,7 +7,11 @@ import auxiliary.BMIRangeName;
 import auxiliary.InjuryLevel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.scene.shape.Shape;
+import javafx.geometry.Insets;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 
 public class InjuryLevelGroup extends ChartGroup
 {
@@ -61,6 +65,9 @@ public class InjuryLevelGroup extends ChartGroup
 		this.injuryLevel = injuryLevel;
 		bmiGroups = new LinkedHashMap<BMIRangeName,BMIGroup>();
 		isEmpty = true;
+		
+		region.setBackground(new Background(new BackgroundFill(Color.DARKORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
+		region.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
 	}
     
     

@@ -6,13 +6,30 @@ import java.util.List;
 import auxiliary.BMIRange;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.BooleanPropertyBase;
-import javafx.scene.shape.Shape;
+import javafx.geometry.Insets;
+import javafx.geometry.NodeOrientation;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 
 public class BMIGroup extends ChartGroup
 {
 
-	private List<PatientOnChart> patientsOnChartMen; 
+	private List<PatientOnChart> patientsOnChartMen;
+	private Region menRegion;
+	private Arc outerArcMen;
+	private Arc innerArcMen;
+	
 	private List<PatientOnChart> patientsOnChartWomen;
+	private Region womenRegion;
+	private Arc outerArcWomen;
+	private Arc innerArcWomen;
+	
+	
 	private InjuryLevelGroup injuryLevelGroup;
 	private BMIRange bmiRange;
 	private BooleanProperty shown = new BooleanPropertyBase(true) 
@@ -59,6 +76,38 @@ public class BMIGroup extends ChartGroup
     	patientsOnChartMen = new LinkedList<PatientOnChart>();
     	patientsOnChartWomen = new LinkedList<PatientOnChart>();
     	isEmpty = true;
+    	
+    	outerArcMen= new Arc();
+    	innerArcMen = new Arc();
+    	outerArcWomen = new Arc();
+    	innerArcWomen = new Arc();
+    	
+    	innerArcMen.setType(ArcType.ROUND);
+		outerArcMen.setType(ArcType.ROUND);
+		innerArcWomen.setType(ArcType.ROUND);
+		outerArcWomen.setType(ArcType.ROUND);
+    	
+    	region.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+		region.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
+		
+		menRegion = new Region();
+		menRegion.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+        menRegion.setPickOnBounds(false);
+        menRegion.setScaleShape(false); 
+        menRegion.setCenterShape(false);
+        menRegion.setCacheShape(false);
+		menRegion.setBackground(new Background(new BackgroundFill(Color.CORNFLOWERBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+		menRegion.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
+		
+		womenRegion = new Region();
+		womenRegion.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+        womenRegion.setPickOnBounds(false);
+        womenRegion.setScaleShape(false); 
+        womenRegion.setCenterShape(false);
+        womenRegion.setCacheShape(false);
+		womenRegion.setBackground(new Background(new BackgroundFill(Color.LIGHTCORAL, CornerRadii.EMPTY, Insets.EMPTY)));
+		womenRegion.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
+		
 	}
     
 	public RingChart getRingChart()
@@ -109,5 +158,53 @@ public class BMIGroup extends ChartGroup
 	public void setPatientsOnChartWomen(List<PatientOnChart> patientsOnChartWomen)
 	{
 		this.patientsOnChartWomen = patientsOnChartWomen;
+	}
+	public Region getMenRegion()
+	{
+		return menRegion;
+	}
+	public void setMenRegion(Region menRegion)
+	{
+		this.menRegion = menRegion;
+	}
+	public Arc getOuterArcMen()
+	{
+		return outerArcMen;
+	}
+	public void setOuterArcMen(Arc outerArcMen)
+	{
+		this.outerArcMen = outerArcMen;
+	}
+	public Arc getInnerArcMen()
+	{
+		return innerArcMen;
+	}
+	public void setInnerArcMen(Arc innerArcMen)
+	{
+		this.innerArcMen = innerArcMen;
+	}
+	public Region getWomenRegion()
+	{
+		return womenRegion;
+	}
+	public void setWomenRegion(Region womenRegion)
+	{
+		this.womenRegion = womenRegion;
+	}
+	public Arc getOuterArcWomen()
+	{
+		return outerArcWomen;
+	}
+	public void setOuterArcWomen(Arc outerArcWomen)
+	{
+		this.outerArcWomen = outerArcWomen;
+	}
+	public Arc getInnerArcWomen()
+	{
+		return innerArcWomen;
+	}
+	public void setInnerArcWomen(Arc innerArcWomen)
+	{
+		this.innerArcWomen = innerArcWomen;
 	}
 }

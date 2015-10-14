@@ -1,5 +1,6 @@
 package ringChart;
 
+import javafx.geometry.NodeOrientation;
 import javafx.scene.layout.Region;
 
 public abstract class ChartElement
@@ -11,6 +12,11 @@ public abstract class ChartElement
 	{
 		this.ringChart = ringChart;
 		region = new Region();
+		region.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
+        region.setPickOnBounds(false);
+        region.setScaleShape(false); 
+        region.setCenterShape(false);
+        region.setCacheShape(false);
 	}
 	
 	public RingChart getRingChart()
