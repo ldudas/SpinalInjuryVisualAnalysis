@@ -17,6 +17,8 @@ public abstract class ChartElement
         region.setScaleShape(false); 
         region.setCenterShape(false);
         region.setCacheShape(false);
+        
+        ringChart.getChartChildren().add(region);
 	}
 	
 	public RingChart getRingChart()

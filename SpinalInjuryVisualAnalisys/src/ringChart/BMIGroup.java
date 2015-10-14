@@ -108,6 +108,9 @@ public class BMIGroup extends ChartGroup
 		womenRegion.setBackground(new Background(new BackgroundFill(Color.LIGHTCORAL, CornerRadii.EMPTY, Insets.EMPTY)));
 		womenRegion.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
 		
+		ringChart.getChartChildren().add(menRegion);
+		ringChart.getChartChildren().add(womenRegion);
+		
 	}
     
 	public RingChart getRingChart()

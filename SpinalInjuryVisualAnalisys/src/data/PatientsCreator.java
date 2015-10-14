@@ -98,9 +98,9 @@ public class PatientsCreator
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C8, 10, 0.1), //18
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C8, 10, 0.1), //20,7
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C8, 10, 0.1), //26,3
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C8, 10, 0.1), //34,6
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C8, 10, 0.1) //34,6
 	    		 
-	    		//T1 mê¿czyŸni
+	    		/*//T1 mê¿czyŸni
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.T1, 10, 0.1), //18
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.T1, 10, 0.1), //20,7
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.T1, 10, 0.1), //26,3
@@ -341,7 +341,7 @@ public class PatientsCreator
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.S5, 10, 0.1), //20,7
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.S5, 10, 0.1), //26,3
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.S5, 10, 0.1) //34,6
-	    				 );
+	    			*/	 );
 		
 	}
 }

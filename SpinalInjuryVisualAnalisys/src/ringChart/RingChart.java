@@ -41,6 +41,7 @@ public class RingChart extends Chart
 	
 	
 	private Map<InjuryLevel,InjuryLevelGroup> injuryLevelGroups;
+	private List<InjuryLevelGroup> shownInjuryLevelGroups;
 	private List<PatientsOnChartConnection> patientsOnChartConnections;
 	private List<PatientsOnChartConnection> shownPatientsOnChartConnections;
 	
@@ -72,6 +73,7 @@ public class RingChart extends Chart
 			        if(current != null) current.addListener(patientsChangeListener); // add data change listener to new list
 			            
 					clearGroupsFromPatients(); //clear groups from patients
+					clearShownInjuryGroupsListAndSubgroups(); //clear shown injury groups and bmi subgroups
 					
 					if(current!= null) //if new list exists
 					{
@@ -83,6 +85,8 @@ public class RingChart extends Chart
 					requestChartLayout(); //redraw the chart
 				}
 		  }
+
+		
 
 		public Object getBean() 
 		  {
@@ -139,6 +143,7 @@ public class RingChart extends Chart
 	{
 		System.out.println("RingChart: constructor(patients). List size: "+patients.size());
 		injuryLevelGroups = new LinkedHashMap<InjuryLevel, InjuryLevelGroup>();
+		shownInjuryLevelGroups = new LinkedList<InjuryLevelGroup>();
 		patientsOnChartConnections = new LinkedList<PatientsOnChartConnection>();
 		shownPatientsOnChartConnections = new LinkedList<PatientsOnChartConnection>();
 		createGroups();
@@ -164,26 +169,20 @@ public class RingChart extends Chart
         radiusOuterInjuryLevel = Math.min(width,height) / 2;
        
         //count number of shown InjuryLevelGroups
-        int shownInjuryLevelGroups = 0;
-        for(InjuryLevelGroup injuryGroup: injuryLevelGroups.values())
-        {
-        	if(injuryGroup.isShown() && !injuryGroup.isEmpty())
-        	{
-        		shownInjuryLevelGroups++;
-        	}
-        }
+        int numbOfShownInjuryLevelGroups = shownInjuryLevelGroups.size();
         
         //System.out.println(shownLevelGroups);
         
-        double sizeOfRingPart = (shownInjuryLevelGroups != 0) ? 360.0 / shownInjuryLevelGroups : 0;   
+        double sizeOfRingPart = (numbOfShownInjuryLevelGroups != 0) ? 360.0 / numbOfShownInjuryLevelGroups : 0;   
         double startAngle = getCurrentStartAngle();
         double innerInjuryArcRadius = radiusMultiplierInnerInjuryLevel*radiusOuterInjuryLevel;
         double outerBMIArcRadius = innerInjuryArcRadius - injuryLevelBmiGap;
         double innerBMIArcRadius = outerBMIArcRadius * radiusMultiplierInnerBmi;
-        for(InjuryLevelGroup injuryGroup: injuryLevelGroups.values())
+        
+        
+        for(InjuryLevelGroup injuryGroup: shownInjuryLevelGroups)
         {
-        	if(injuryGroup.isShown() && !injuryGroup.isEmpty())
-        	{
+        	
         		//drawing injury level ring part
         		Region ringPartRegion = injuryGroup.getRegion();
         		Arc outerArc = injuryGroup.getOuterArc();
@@ -204,33 +203,24 @@ public class RingChart extends Chart
                 ringPartRegion.setLayoutX(centerX);
                 ringPartRegion.setLayoutY(centerY);
                 
-                if(!getChartChildren().contains(ringPartRegion))
+              /*  if(!getChartChildren().contains(ringPartRegion))
                 {
                 	getChartChildren().add(ringPartRegion);
-                }
+                }*/
                 
                 
                 
                 // drawing bmi subgroup ring parts
                 
                 //count number of shown bmi groups inside InjuryLevelGroups
-                int shownBMIGroups = 0;
-                for(BMIGroup bmiGroup: injuryGroup.getBmiGroups().values())
-                {
-                	if(bmiGroup.isShown() && !bmiGroup.isEmpty())
-                	{
-                		shownBMIGroups++;
-                	}
-                }
-                
+                int shownBMIGroups = injuryGroup.getShownBMIGroups().size();
                 
                 double sizeOfBMIRingPart = (shownBMIGroups != 0) ? sizeOfRingPart / shownBMIGroups : 0;
                 double startAngleBMIGroup = startAngle;
                 double sizeOfSexGroup = sizeOfBMIRingPart/2;
-                for(BMIGroup bmiGroup: injuryGroup.getBmiGroups().values())
+                for(BMIGroup bmiGroup: injuryGroup.getShownBMIGroups())
                 {
-                	if(bmiGroup.isShown() && !bmiGroup.isEmpty())
-                	{
+                	
                 		//drawing bmi group ring part
                 		Region ringPartBMIRegion = bmiGroup.getRegion();
                 		Arc outerArcBMI = bmiGroup.getOuterArc();
@@ -251,10 +241,10 @@ public class RingChart extends Chart
                         ringPartBMIRegion.setLayoutX(centerX);
                         ringPartBMIRegion.setLayoutY(centerY);
                         
-                        if(!getChartChildren().contains(ringPartBMIRegion))
+                       /* if(!getChartChildren().contains(ringPartBMIRegion))
                         {
                         	getChartChildren().add(ringPartBMIRegion);
-                        }
+                        }*/
                         
                         //drawing men region
                 		Region ringPartMenRegion = bmiGroup.getMenRegion();
@@ -276,10 +266,10 @@ public class RingChart extends Chart
                         ringPartMenRegion.setLayoutX(centerX);
                         ringPartMenRegion.setLayoutY(centerY);
                         
-                        if(!getChartChildren().contains(ringPartMenRegion))
+                       /* if(!getChartChildren().contains(ringPartMenRegion))
                         {
                         	getChartChildren().add(ringPartMenRegion);
-                        }
+                        }*/
                         
                         //drawing women region
                         Region ringPartWomenRegion = bmiGroup.getWomenRegion();
@@ -301,57 +291,24 @@ public class RingChart extends Chart
                         ringPartWomenRegion.setLayoutX(centerX);
                         ringPartWomenRegion.setLayoutY(centerY);
                         
-                        if(!getChartChildren().contains(ringPartWomenRegion))
+                        /*if(!getChartChildren().contains(ringPartWomenRegion))
                         {
                         	getChartChildren().add(ringPartWomenRegion);
-                        }
+                        }*/
                         
                         startAngleBMIGroup += sizeOfBMIRingPart;
-                	}
+                	
+                
                 }
                 
-                
                 startAngle+=sizeOfRingPart;
-        	}
         }
-        
-        //System.out.println(scale);
-        
-        /*if(!getChartChildren().contains(ring))
-        {
-        	arc.setType(ArcType.ROUND); //ustaw typ kwaa³ka ciasta
-         	inner.setType(ArcType.ROUND); //ustaw typ kwaa³ka ciasta
-        	ring.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
-        	ring.setOpacity(0.4);
-        	ring.setStyle("-fx-border-color: green");
-        	ring.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT); //orientacja wêz³a
-            ring.setPickOnBounds(false);
-            ring.setScaleShape(false); 
-            ring.setCenterShape(false);
-            ring.setCacheShape(false);
-        	getChartChildren().add(ring);
-        }
-        
-       
-        arc.setStartAngle(0); //ustaw k¹t pocz¹tkowy
-        arc.setLength(100); //ustaw k¹t
-        arc.setRadiusX(0.5*width); //ustawX promienia (bo arc to kawa³ek elipsy)
-        arc.setRadiusY(0.5*width); //ustawY promienia (bo arc to kawa³ek elipsy)
-        
-        inner.setStartAngle(0); //ustaw k¹t pocz¹tkowy
-        inner.setLength(100); //ustaw k¹t
-        inner.setRadiusX(0.2*width); //ustawX promienia (bo arc to kawa³ek elipsy)
-        inner.setRadiusY(0.2*width); //ustawY promienia (bo arc to kawa³ek elipsy)
-  
-        ring.setLayoutX(centerX);
-        ring.setLayoutY(centerY);
-       
-        ring.setShape(Shape.subtract(arc, inner));
-      */
-        
-       
-        
+    
 	}
+       
+        
+       
+    
 	
 	
 	/*------------------- private methods ---------------------------------------------------------*/
@@ -380,6 +337,15 @@ public class RingChart extends Chart
 			}
 		}*/
 		
+	}
+	
+	private void clearShownInjuryGroupsListAndSubgroups()
+	{
+		for(InjuryLevelGroup injuryLevelGr: shownInjuryLevelGroups)
+		{
+			injuryLevelGr.getShownBMIGroups().clear();
+		}
+		shownInjuryLevelGroups.clear();	
 	}
 	
 	private void clearGroupsFromPatients()
@@ -432,6 +398,17 @@ public class RingChart extends Chart
 					// patient was added to bmi subgroup and injury level group, so they are not empty
 					bmiGroup.setEmpty(false); 
 					bmiGroup.getInjuryLevelGroup().setEmpty(false);
+					
+					//adding shown groups to shown collections
+					// TODO add to the sorting collection
+					if(!shownInjuryLevelGroups.contains(bmiGroup.getInjuryLevelGroup()))
+					{
+						shownInjuryLevelGroups.add(bmiGroup.getInjuryLevelGroup());
+					}
+					if(!bmiGroup.getInjuryLevelGroup().getShownBMIGroups().contains(bmiGroup))
+					{
+						bmiGroup.getInjuryLevelGroup().getShownBMIGroups().add(bmiGroup);
+					}
 				}
 			}
 			
