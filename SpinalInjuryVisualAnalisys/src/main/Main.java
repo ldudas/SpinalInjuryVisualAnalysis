@@ -4,8 +4,11 @@ import auxiliary.Patient;
 import data.PatientsCreator;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import ringChart.RingChart;
 
@@ -34,6 +37,15 @@ public class Main extends Application
 	     borderPane.setCenter(ringChart);
 	     stage.setScene(scene);
 	     stage.show();
+	     
+	     ringChart.getPatients().get(0).getPatientOnChart().getRegion().addEventHandler(MouseEvent.MOUSE_PRESSED,
+	                new EventHandler<MouseEvent>() {
+             @Override public void handle(MouseEvent e) {
+                Region reg =(Region) e.getSource();
+               ringChart.setStartAngle(ringChart.getStartAngle()+90);
+   
+              }
+         });
 		
 	}
 

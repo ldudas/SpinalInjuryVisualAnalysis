@@ -14,27 +14,31 @@ public class PatientsCreator
 	    		 (
 	    		//C1 mê¿czyŸni
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C1, 10, 0.1), //18
-	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C1, 10, 0.1), //20,7
-	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C1, 10, 0.1), //26,3
-	    		 new Patient("Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C1, 10, 0.1), //34,6
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C1, 10, 0.3), //20,7
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C1, 10, 0.5), //26,3
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C1, 10, 0.55), //34,6
 	    		//C1 kobiety
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C1, 10, 0.1), //18
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C1, 10, 0.1), //20,7
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C1, 10, 0.1), //26,3
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C1, 10, 0.1), //34,6
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C1, 10, 0.34), //18
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C1, 10, 0.12), //20,7
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C1, 10, 0.90), //26,3
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C1, 10, 0.99), //34,6
 	    		 
 	    		//C2 mê¿czyŸni
-	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C2, 10, 0.1), //18
-	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C2, 10, 0.1), //20,7
-	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C2, 10, 0.1), //26,3
-	    		 new Patient("Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C2, 10, 0.1), //34,6
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C2, 10, 0.34), //18
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C2, 10, 0.22), //20,7
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C2, 10, 0.7), //26,3
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C2, 10, 0.8), //34,6
 	    		//C2 kobiety
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C2, 10, 0.1), //18
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C2, 10, 0.1), //20,7
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C2, 10, 0.1), //26,3
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C2, 10, 0.1), //34,6
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C2, 10, 0.77), //18
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C2, 10, 0.01), //20,7
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C2, 10, 0.2), //26,3
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C2, 10, 0.16), //34,6
+	    		
 	    		 
-	    		//C3 mê¿czyŸni
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C2, 10, 0.16),
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C2, 10, 0.16),
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C2, 10, 0.16)
+	    		/*//C3 mê¿czyŸni
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C3, 10, 0.1), //18
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C3, 10, 0.1), //20,7
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C3, 10, 0.1), //26,3
@@ -98,9 +102,13 @@ public class PatientsCreator
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C8, 10, 0.1), //18
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C8, 10, 0.1), //20,7
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C8, 10, 0.1), //26,3
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C8, 10, 0.1) //34,6
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C8, 10, 0.1), //34,6
 	    		 
-	    		/*//T1 mê¿czyŸni
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C8, 10, 0.1),
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C8, 10, 0.1),
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C8, 10, 0.1)
+	    		 
+	    		//T1 mê¿czyŸni
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.T1, 10, 0.1), //18
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.T1, 10, 0.1), //20,7
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.T1, 10, 0.1), //26,3

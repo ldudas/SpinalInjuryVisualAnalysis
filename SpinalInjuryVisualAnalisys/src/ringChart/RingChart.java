@@ -14,6 +14,9 @@ import auxiliary.BMIRangeName;
 import auxiliary.InjuryLevel;
 import auxiliary.Patient;
 import auxiliary.Sex;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.DoublePropertyBase;
 import javafx.beans.property.ObjectProperty;
@@ -22,8 +25,15 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 public class RingChart extends Chart
 {
@@ -32,6 +42,8 @@ public class RingChart extends Chart
 	private static double injuryLevelBmiGap = 1;
 	private static double radiusMultiplierInnerBmi = 0.9;
 	private static double deltaWNM = 0.1;
+	private static double patientsGap = 10;
+	private static double patientRegionRadius = 4;
 	
 	
 	
@@ -109,7 +121,7 @@ public class RingChart extends Chart
   	public void invalidated() 
   	{
   		System.out.println("RingChart: startAngle invalidated()");
-  		setCurrentStartAngle(get());
+  		animateStartAngleChange(get());
     }
 
   	@Override
@@ -160,13 +172,55 @@ public class RingChart extends Chart
 		
 		centerX = width/2 + left; //X center of chart pane
         centerY = height/2 + top; //Y center of char pane
-        radiusOuterInjuryLevel = Math.min(width,height) / 2;
-       
+        
+        
+        double startAnglePads = getCurrentStartAngle();
+        double xPad=0d;
+        double yPad=0d;
+        
         //count number of shown InjuryLevelGroups
         int numbOfShownInjuryLevelGroups = shownInjuryLevelGroups.size();
+        double sizeOfRingPart = (numbOfShownInjuryLevelGroups != 0) ? 360.0 / numbOfShownInjuryLevelGroups : 0; 
+        for(InjuryLevelGroup injuryLevelGroup: shownInjuryLevelGroups.values())
+        {
+        	//count number of shown bmi groups inside InjuryLevelGroups
+            int shownBMIGroups = injuryLevelGroup.getShownBMIGroups().size();
+            
+            double sizeOfBMIRingPart = (shownBMIGroups != 0) ? sizeOfRingPart / shownBMIGroups : 0; 
+        	double startAngleBMIGroup = startAnglePads;
+        	
+        	for(BMIGroup bmiGroup:injuryLevelGroup.getShownBMIGroups().values())
+        	{
+        		double radiusMen = bmiGroup.getShownPatientsOnChartMen().size()*(patientsGap+2*patientRegionRadius)+patientsGap;
+        		double angleMen = normalizeAngle(startAngleBMIGroup+(sizeOfBMIRingPart/4));
+        		double actXPadMen = calcX(angleMen,radiusMen,0);
+        		double actYPadMen = calcY(angleMen,radiusMen,0);
+        		
+        		double radiusWomen = bmiGroup.getShownPatientsOnChartWomen().size()*(patientsGap+2*patientRegionRadius)+patientsGap;
+        		double angleWomen = normalizeAngle(startAngleBMIGroup+(3*sizeOfBMIRingPart/4));
+        		double actXPadWomen = calcX(angleWomen,radiusWomen,0);
+        		double actYPadWomen = calcY(angleWomen,radiusWomen,0);
+        		
+        		double maxXPad = 2 * Math.max(Math.abs(actXPadMen), Math.abs(actXPadWomen)); 
+        		double maxYPad = 2 * Math.max(Math.abs(actYPadMen), Math.abs(actYPadWomen));
+        		
+        		xPad = Math.max(xPad, maxXPad);
+        		yPad = Math.max(yPad, maxYPad);
+        		
+        		startAngleBMIGroup += sizeOfBMIRingPart;
+        		
+        		
+        	}
+        	
+        	startAnglePads+=sizeOfRingPart;
+        }
+        
+        
+       radiusOuterInjuryLevel = Math.min(width-xPad,height-yPad) / 2;
+       
         //System.out.println(shownLevelGroups);
         
-        double sizeOfRingPart = (numbOfShownInjuryLevelGroups != 0) ? 360.0 / numbOfShownInjuryLevelGroups : 0;   
+       // double sizeOfRingPart = (numbOfShownInjuryLevelGroups != 0) ? 360.0 / numbOfShownInjuryLevelGroups : 0;   
         double startAngle = getCurrentStartAngle();
         double innerInjuryArcRadius = radiusMultiplierInnerInjuryLevel*radiusOuterInjuryLevel;
         double outerBMIArcRadius = innerInjuryArcRadius - injuryLevelBmiGap;
@@ -230,6 +284,15 @@ public class RingChart extends Chart
                         ringPartBMIRegion.setLayoutY(centerY);
                         
                         
+                        
+                        
+                        
+                        double radiusMen = (bmiGroup.getShownPatientsOnChartMen().size()*(patientsGap+2*patientRegionRadius))+patientsGap;
+                		double angleMen = startAngleBMIGroup+(sizeOfBMIRingPart/4);
+                		double radiusWomen = (bmiGroup.getShownPatientsOnChartWomen().size()*(patientsGap+2*patientRegionRadius))+patientsGap;
+                		double angleWomen = startAngleBMIGroup+(3*sizeOfBMIRingPart/4);
+                        
+                        
                         //drawing men region
                 		Region ringPartMenRegion = bmiGroup.getMenRegion();
                 		Arc outerArcMen = bmiGroup.getOuterArcMen();
@@ -237,8 +300,8 @@ public class RingChart extends Chart
                         
                         outerArcMen.setStartAngle(startAngleBMIGroup); //ustaw k¹t pocz¹tkowy
                         outerArcMen.setLength(sizeOfSexGroup); //ustaw k¹t
-                        outerArcMen.setRadiusX(radiusOuterInjuryLevel+20); //ustawX promienia (bo arc to kawa³ek elipsy)
-                        outerArcMen.setRadiusY(radiusOuterInjuryLevel+20); //ustawY promienia (bo arc to kawa³ek elipsy)
+                        outerArcMen.setRadiusX(radiusOuterInjuryLevel+radiusMen); //ustawX promienia (bo arc to kawa³ek elipsy)
+                        outerArcMen.setRadiusY(radiusOuterInjuryLevel+radiusMen); //ustawY promienia (bo arc to kawa³ek elipsy)
                         
                         innerArcMen.setStartAngle(startAngleBMIGroup); //ustaw k¹t pocz¹tkowy
                         innerArcMen.setLength(sizeOfSexGroup); //ustaw k¹t
@@ -258,8 +321,8 @@ public class RingChart extends Chart
                         
                         outerArcWomen.setStartAngle(startAngleBMIGroup+sizeOfSexGroup); //ustaw k¹t pocz¹tkowy
                         outerArcWomen.setLength(sizeOfSexGroup); //ustaw k¹t
-                        outerArcWomen.setRadiusX(radiusOuterInjuryLevel+20); //ustawX promienia (bo arc to kawa³ek elipsy)
-                        outerArcWomen.setRadiusY(radiusOuterInjuryLevel+20); //ustawY promienia (bo arc to kawa³ek elipsy)
+                        outerArcWomen.setRadiusX(radiusOuterInjuryLevel+radiusWomen); //ustawX promienia (bo arc to kawa³ek elipsy)
+                        outerArcWomen.setRadiusY(radiusOuterInjuryLevel+radiusWomen); //ustawY promienia (bo arc to kawa³ek elipsy)
                         
                         innerArcWomen.setStartAngle(startAngleBMIGroup+sizeOfSexGroup); //ustaw k¹t pocz¹tkowy
                         innerArcWomen.setLength(sizeOfSexGroup); //ustaw k¹t
@@ -271,6 +334,72 @@ public class RingChart extends Chart
                         ringPartWomenRegion.setLayoutX(centerX);
                         ringPartWomenRegion.setLayoutY(centerY);
                         
+                        //drawing men patients
+                        double firstPatientsRegionRadius = radiusOuterInjuryLevel+patientsGap+patientRegionRadius;
+                        double xManArcWidthFirstPoint = calcX(startAngleBMIGroup,firstPatientsRegionRadius,centerX);
+                        double yManArcWidthFirstPoint = calcY(startAngleBMIGroup,firstPatientsRegionRadius,centerY);
+                        double xManArcWidthSecondPoint = calcX(startAngleBMIGroup+sizeOfSexGroup,firstPatientsRegionRadius,centerX);
+                        double yManArcWidthSecondPoint = calcY(startAngleBMIGroup+sizeOfSexGroup,firstPatientsRegionRadius,centerY);
+                        
+                        double pointsDistanceMen = pointsDistance(xManArcWidthFirstPoint, yManArcWidthFirstPoint, xManArcWidthSecondPoint, yManArcWidthSecondPoint);
+                        int manCounter = 1;
+                        for(PatientOnChart patientOnChatMen:bmiGroup.getShownPatientsOnChartMen())
+                        {
+                        	double regionX; 
+                        	double regionY;
+                        	
+                        	if(manCounter==1)
+                        	{
+                        		regionX = calcX(angleMen,radiusOuterInjuryLevel+patientsGap+patientRegionRadius,centerX);
+                        		regionY = calcY(angleMen,radiusOuterInjuryLevel+patientsGap+patientRegionRadius,centerY);
+                        	}
+                        	else
+                        	{
+                        		regionX = calcX(angleMen,radiusOuterInjuryLevel+((manCounter-1)*(patientsGap+2*patientRegionRadius))+(patientsGap+patientRegionRadius),centerX);
+                        		regionY = calcY(angleMen,radiusOuterInjuryLevel+((manCounter-1)*(patientsGap+2*patientRegionRadius))+(patientsGap+patientRegionRadius),centerY);
+                        	}
+                        	
+                        	Region patientOnChartMenRegion = patientOnChatMen.getRegion();
+                        	patientOnChartMenRegion.setLayoutX(regionX);
+                        	patientOnChartMenRegion.setLayoutY(regionY);
+                        	double patientRadius = pointsDistanceMen<2*patientRegionRadius? pointsDistanceMen/2:patientRegionRadius;
+                        	((Circle)patientOnChartMenRegion.getShape()).setRadius(patientRadius);
+                        	manCounter++;
+                        }
+                        
+                        //drawing women patients
+                        double xWomanArcWidthFirstPoint = calcX(startAngleBMIGroup+sizeOfSexGroup,firstPatientsRegionRadius,centerX);
+                        double yWomanArcWidthFirstPoint = calcY(startAngleBMIGroup+sizeOfSexGroup,firstPatientsRegionRadius,centerY);
+                        double xWomanArcWidthSecondPoint = calcX(startAngleBMIGroup+2*sizeOfSexGroup,firstPatientsRegionRadius,centerX);
+                        double yWomanArcWidthSecondPoint = calcY(startAngleBMIGroup+2*sizeOfSexGroup,firstPatientsRegionRadius,centerY);
+                        
+                        double pointsDistanceWomen = pointsDistance(xWomanArcWidthFirstPoint, yWomanArcWidthFirstPoint, xWomanArcWidthSecondPoint, yWomanArcWidthSecondPoint);
+                        
+                        int womanCounter = 1;
+                        for(PatientOnChart patientOnChatWomen:bmiGroup.getShownPatientsOnChartWomen())
+                        {
+                        	double regionX; 
+                        	double regionY;
+                        	
+                        	if(womanCounter==1)
+                        	{
+                        		regionX = calcX(angleWomen,radiusOuterInjuryLevel+patientsGap+patientRegionRadius,centerX);
+                        		regionY = calcY(angleWomen,radiusOuterInjuryLevel+patientsGap+patientRegionRadius,centerY);
+                        	}
+                        	else
+                        	{
+                        		regionX = calcX(angleWomen,radiusOuterInjuryLevel+((womanCounter-1)*(patientsGap+2*patientRegionRadius))+(patientsGap+patientRegionRadius),centerX);
+                        		regionY = calcY(angleWomen,radiusOuterInjuryLevel+((womanCounter-1)*(patientsGap+2*patientRegionRadius))+(patientsGap+patientRegionRadius),centerY);
+                        	}
+                        	
+                        	Region patientOnChartWomenRegion = patientOnChatWomen.getRegion();
+                        	patientOnChartWomenRegion.setLayoutX(regionX);
+                        	patientOnChartWomenRegion.setLayoutY(regionY);
+                        	double patientRadius = pointsDistanceWomen<2*patientRegionRadius? pointsDistanceWomen/2:patientRegionRadius;
+                        	((Circle)patientOnChartWomenRegion.getShape()).setRadius(patientRadius);
+                        	womanCounter++;
+                        }
+                        
                         
                         startAngleBMIGroup += sizeOfBMIRingPart;
                 	
@@ -278,6 +407,56 @@ public class RingChart extends Chart
                 }
                 
                 startAngle+=sizeOfRingPart;
+        }
+        
+        
+        //drawing patients connections
+        
+        for(PatientsOnChartConnection patientsConnection:shownPatientsOnChartConnections)
+        {
+        	PatientOnChart patientFirst = patientsConnection.getPatientFrom();
+        	PatientOnChart patientSecond = patientsConnection.getPatientTo();
+        	
+        	Arc patientFirstBMIGroupInnerArc = patientFirst.getBmiGroup().getInnerArc();
+        	
+        	double radiusFirst = patientFirstBMIGroupInnerArc.getRadiusX();
+        	double startAngleFirst = patientFirstBMIGroupInnerArc.getStartAngle();
+        	double sizeFirst = patientFirstBMIGroupInnerArc.getLength();
+        	
+        	double patientsFirstAngle = startAngleFirst + 
+        							(patientFirst.getPatient().getSex()==Sex.MAN? 0.25 : 0.75) * sizeFirst;
+        	
+        	double firstX = calcX(patientsFirstAngle,radiusFirst,centerX);
+        	double firstY = calcY(patientsFirstAngle,radiusFirst,centerY);
+        	
+        	
+        	Arc patientSecondBMIGroupInnerArc = patientSecond.getBmiGroup().getInnerArc();
+        	
+        	double radiusSecond = patientSecondBMIGroupInnerArc.getRadiusX();
+        	double startAngleSecond = patientSecondBMIGroupInnerArc.getStartAngle();
+        	double sizeSecond = patientSecondBMIGroupInnerArc.getLength();
+        	
+        	double patientsSecondAngle = startAngleSecond + 
+        							(patientSecond.getPatient().getSex()==Sex.MAN? 0.25 : 0.75) * sizeSecond;
+        	
+        	double secondX = calcX(patientsSecondAngle,radiusSecond,centerX);
+        	double secondY = calcY(patientsSecondAngle,radiusSecond,centerY);
+        	
+
+        	
+        	QuadCurve curve = patientsConnection.getQuadCurve();
+        	curve.setStartX(firstX);
+        	curve.setStartY(firstY);
+        	curve.setEndX(secondX);
+        	curve.setEndY(secondY);
+        	curve.setControlX(centerX);
+        	curve.setControlY(centerY);
+        	
+        	Stop[] stops = new Stop[] { new Stop(0, Color.YELLOW), new Stop(1, Color.RED)};
+            LinearGradient lg = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stops);
+        	
+            curve.setStroke(lg);
+        	
         }
     
 	}
@@ -383,7 +562,7 @@ public class RingChart extends Chart
 						patientsBmiGroup.getShownPatientsOnChartWomen().add(patientOnChart); //patient will be shown
 					}
 					
-					//getChartChildren().add(patientOnChart.getRegion()); //add patient region to drawn chartChidren
+				 //add patient region to drawn chartChidren
 					
 					// patient was added to bmi subgroup and injury level group, so they are not empty
 					patientsBmiGroup.setEmpty(false); 
@@ -403,6 +582,8 @@ public class RingChart extends Chart
 						getChartChildren().add(patientsBmiGroup.getMenRegion());
 						getChartChildren().add(patientsBmiGroup.getWomenRegion());
 					}
+					
+					getChartChildren().add(patientOnChart.getRegion());
 				}
 			}
 			
@@ -430,6 +611,7 @@ public class RingChart extends Chart
 					PatientsOnChartConnection connection = new PatientsOnChartConnection(p1.getPatientOnChart(), p2.getPatientOnChart());
 					patientsOnChartConnections.add(connection);
 					shownPatientsOnChartConnections.add(connection);
+					getChartChildren().add(connection.getQuadCurve());
 				}
 			}
 		}
@@ -474,6 +656,45 @@ public class RingChart extends Chart
 		}
 		return null;
 	}
+	
+	 private void animateStartAngleChange(double newValue) 
+     {
+		
+     	 if (shouldAnimate()) {
+              animate(
+                  new KeyFrame(Duration.ZERO, new KeyValue(currentStartAngleProperty(),getCurrentStartAngle())),
+                  new KeyFrame(Duration.millis(1000),new KeyValue(currentStartAngleProperty(),
+                          newValue, Interpolator.EASE_BOTH))
+              );
+          } else {
+              requestChartLayout();
+          }
+			
+	}
+	
+	 //wylicz x na podstawie k¹ta, d³ugoœci ramienia i x œrodka
+    private static double calcX(double angle, double radius, double centerX) {
+        return (double)(centerX + radius * Math.cos(Math.toRadians(-angle)));
+    }
+
+    //wylicz y na podstawie k¹ta, d³ugoœci ramienia i y œrodka
+    private static double calcY(double angle, double radius, double centerY) {
+        return (double)(centerY + radius * Math.sin(Math.toRadians(-angle)));
+    }
+    
+    /** Normalize any angle into -180 to 180 deg range */
+    //potrzebne do funkcji sin/cos
+    private static double normalizeAngle(double angle) {
+        double a = angle % 360; //a = reszta z dzielenia k¹ta przez 360
+        if (a <= -180) a += 360; //je¿eli k¹t jest mniejszy od -180, dodaj 360
+        if (a > 180) a -= 360; //je¿eli k¹t wiêkszy od 180, odejmij 180
+        return a;
+    }
+    
+    private static double pointsDistance(double firstX,double firstY,double secondX,double secondY)
+    {
+    	return Math.sqrt(Math.pow(secondX-firstX, 2)+Math.pow(secondY-firstY,2));
+    }
 	
 
 }

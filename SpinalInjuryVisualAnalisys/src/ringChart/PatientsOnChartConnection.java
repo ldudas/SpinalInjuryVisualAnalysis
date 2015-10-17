@@ -1,19 +1,26 @@
 package ringChart;
 
-import javafx.scene.shape.Shape;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
+import javafx.scene.shape.QuadCurve;
 
 public class PatientsOnChartConnection
 {
 
 	private PatientOnChart patientFrom;
 	private PatientOnChart patientTo;
-	private Shape connectorShape;
-	
+	private QuadCurve quadCurve;
 
 	public PatientsOnChartConnection(PatientOnChart patientFrom, PatientOnChart patientTo)
-	{
+	{	
 		this.patientFrom = patientFrom;
 		this.patientTo = patientTo;
+		
+		quadCurve = new QuadCurve();
+		quadCurve.setFill(null);
+		quadCurve.setStrokeWidth(1.5);
 	}
 
 	
@@ -37,14 +44,17 @@ public class PatientsOnChartConnection
 		this.patientTo = patientTo;
 	}
 
-	public Shape getConnectorShape()
+
+	public QuadCurve getQuadCurve()
 	{
-		return connectorShape;
+		return quadCurve;
 	}
 
-	public void setConnectorShape(Shape connectorShape)
+
+	public void setQuadCurve(QuadCurve quadCurve)
 	{
-		this.connectorShape = connectorShape;
+		this.quadCurve = quadCurve;
 	}
+	
 	
 }
