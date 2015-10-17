@@ -2,11 +2,13 @@ package auxiliary;
 
 public class BMIRange
 {
+	private BMIRangeName bmiRangeName;
 	private double fromBMI;
 	private double toBMI;
 		
-	public BMIRange(double fromBMI, double toBMI)
+	public BMIRange(BMIRangeName bmiRangeName,double fromBMI, double toBMI)
 	{
+		this.bmiRangeName = bmiRangeName;
 		this.fromBMI = fromBMI;
 		this.toBMI = toBMI;
 	}
@@ -26,6 +28,16 @@ public class BMIRange
 	public void setToBMI(double toBMI)
 	{
 		this.toBMI = toBMI;
+	}
+
+	public BMIRangeName getBmiRangeName()
+	{
+		return bmiRangeName;
+	}
+
+	public void setBmiRangeName(BMIRangeName bmiRangeName)
+	{
+		this.bmiRangeName = bmiRangeName;
 	}
 
 	@Override

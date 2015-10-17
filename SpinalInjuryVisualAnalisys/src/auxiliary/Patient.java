@@ -1,5 +1,7 @@
 package auxiliary;
 
+import ringChart.PatientOnChart;
+
 public class Patient 
 {
 
@@ -11,6 +13,8 @@ public class Patient
 	private InjuryLevel injuryLevel;
 	private double strength;
 	private double wnm;
+	
+	private PatientOnChart patientOnChart;
 	
 	
 	public Patient(String firstName, String lastName, Sex sex, double weight, double height, InjuryLevel injuryLevel,double strength, double wnm) 
@@ -88,6 +92,16 @@ public class Patient
 	public void setWnm(double wnm) 
 	{
 		this.wnm = wnm;
+	}
+
+	public PatientOnChart getPatientOnChart()
+	{
+		return patientOnChart;
+	}
+
+	public void setPatientOnChart(PatientOnChart patientOnChart)
+	{
+		this.patientOnChart = patientOnChart;
 	}
 	
 	

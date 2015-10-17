@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.sun.javafx.charts.Legend;
 
@@ -20,15 +21,8 @@ import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.NodeOrientation;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
-import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Shape;
 
 public class RingChart extends Chart
@@ -37,11 +31,12 @@ public class RingChart extends Chart
 	private static double radiusMultiplierInnerInjuryLevel = 0.9;
 	private static double injuryLevelBmiGap = 1;
 	private static double radiusMultiplierInnerBmi = 0.9;
+	private static double deltaWNM = 0.1;
 	
 	
 	
 	private Map<InjuryLevel,InjuryLevelGroup> injuryLevelGroups;
-	private List<InjuryLevelGroup> shownInjuryLevelGroups;
+	private Map<Integer,InjuryLevelGroup> shownInjuryLevelGroups;
 	private List<PatientsOnChartConnection> patientsOnChartConnections;
 	private List<PatientsOnChartConnection> shownPatientsOnChartConnections;
 	
@@ -71,13 +66,16 @@ public class RingChart extends Chart
 				{
 					if(old != null) old.removeListener(patientsChangeListener); // remove data change listener from old list
 			        if(current != null) current.addListener(patientsChangeListener); // add data change listener to new list
-			            
+			        
+			        clearChartChildren();
 					clearGroupsFromPatients(); //clear groups from patients
-					clearShownInjuryGroupsListAndSubgroups(); //clear shown injury groups and bmi subgroups
+					clearShownInjuryGroupsBMIGroupsWomanManGroups(); //clear shown injury groups and bmi subgroups
+					clearPatientsOnChartConnections();
 					
 					if(current!= null) //if new list exists
 					{
 						assignPatientsToGroups(current); //assign patients from new list to chart groups, subgroups
+						createPatientsOnChartConnections(current);
 					}
 					
 					
@@ -86,7 +84,6 @@ public class RingChart extends Chart
 				}
 		  }
 
-		
 
 		public Object getBean() 
 		  {
@@ -143,7 +140,7 @@ public class RingChart extends Chart
 	{
 		System.out.println("RingChart: constructor(patients). List size: "+patients.size());
 		injuryLevelGroups = new LinkedHashMap<InjuryLevel, InjuryLevelGroup>();
-		shownInjuryLevelGroups = new LinkedList<InjuryLevelGroup>();
+		shownInjuryLevelGroups = new TreeMap<Integer,InjuryLevelGroup>();
 		patientsOnChartConnections = new LinkedList<PatientsOnChartConnection>();
 		shownPatientsOnChartConnections = new LinkedList<PatientsOnChartConnection>();
 		createGroups();
@@ -153,9 +150,6 @@ public class RingChart extends Chart
 	}
 	 
 	/*------------------- METHODS -----------------------------------------------------------------*/ 
-	 Arc arc = new Arc();
-	 Arc inner = new Arc();
-	 Region  ring = new Region();
 	
 	 
 	@Override
@@ -170,7 +164,6 @@ public class RingChart extends Chart
        
         //count number of shown InjuryLevelGroups
         int numbOfShownInjuryLevelGroups = shownInjuryLevelGroups.size();
-        
         //System.out.println(shownLevelGroups);
         
         double sizeOfRingPart = (numbOfShownInjuryLevelGroups != 0) ? 360.0 / numbOfShownInjuryLevelGroups : 0;   
@@ -180,7 +173,7 @@ public class RingChart extends Chart
         double innerBMIArcRadius = outerBMIArcRadius * radiusMultiplierInnerBmi;
         
         
-        for(InjuryLevelGroup injuryGroup: shownInjuryLevelGroups)
+        for(InjuryLevelGroup injuryGroup: shownInjuryLevelGroups.values())
         {
         	
         		//drawing injury level ring part
@@ -203,11 +196,6 @@ public class RingChart extends Chart
                 ringPartRegion.setLayoutX(centerX);
                 ringPartRegion.setLayoutY(centerY);
                 
-              /*  if(!getChartChildren().contains(ringPartRegion))
-                {
-                	getChartChildren().add(ringPartRegion);
-                }*/
-                
                 
                 
                 // drawing bmi subgroup ring parts
@@ -218,7 +206,7 @@ public class RingChart extends Chart
                 double sizeOfBMIRingPart = (shownBMIGroups != 0) ? sizeOfRingPart / shownBMIGroups : 0;
                 double startAngleBMIGroup = startAngle;
                 double sizeOfSexGroup = sizeOfBMIRingPart/2;
-                for(BMIGroup bmiGroup: injuryGroup.getShownBMIGroups())
+                for(BMIGroup bmiGroup: injuryGroup.getShownBMIGroups().values())
                 {
                 	
                 		//drawing bmi group ring part
@@ -241,10 +229,6 @@ public class RingChart extends Chart
                         ringPartBMIRegion.setLayoutX(centerX);
                         ringPartBMIRegion.setLayoutY(centerY);
                         
-                       /* if(!getChartChildren().contains(ringPartBMIRegion))
-                        {
-                        	getChartChildren().add(ringPartBMIRegion);
-                        }*/
                         
                         //drawing men region
                 		Region ringPartMenRegion = bmiGroup.getMenRegion();
@@ -265,11 +249,7 @@ public class RingChart extends Chart
                         ringPartMenRegion.setShape(Shape.subtract(outerArcMen, innerArcMen));
                         ringPartMenRegion.setLayoutX(centerX);
                         ringPartMenRegion.setLayoutY(centerY);
-                        
-                       /* if(!getChartChildren().contains(ringPartMenRegion))
-                        {
-                        	getChartChildren().add(ringPartMenRegion);
-                        }*/
+
                         
                         //drawing women region
                         Region ringPartWomenRegion = bmiGroup.getWomenRegion();
@@ -291,10 +271,6 @@ public class RingChart extends Chart
                         ringPartWomenRegion.setLayoutX(centerX);
                         ringPartWomenRegion.setLayoutY(centerY);
                         
-                        /*if(!getChartChildren().contains(ringPartWomenRegion))
-                        {
-                        	getChartChildren().add(ringPartWomenRegion);
-                        }*/
                         
                         startAngleBMIGroup += sizeOfBMIRingPart;
                 	
@@ -339,10 +315,15 @@ public class RingChart extends Chart
 		
 	}
 	
-	private void clearShownInjuryGroupsListAndSubgroups()
+	private void clearShownInjuryGroupsBMIGroupsWomanManGroups()
 	{
-		for(InjuryLevelGroup injuryLevelGr: shownInjuryLevelGroups)
+		for(InjuryLevelGroup injuryLevelGr: shownInjuryLevelGroups.values())
 		{
+			for(BMIGroup bmiGroup : injuryLevelGr.getBmiGroups().values())
+			{
+				bmiGroup.getShownPatientsOnChartWomen().clear();
+				bmiGroup.getShownPatientsOnChartMen().clear();
+			}
 			injuryLevelGr.getShownBMIGroups().clear();
 		}
 		shownInjuryLevelGroups.clear();	
@@ -382,32 +363,45 @@ public class RingChart extends Chart
 				
 				if(patientsBMI>bmiRange.getFromBMI() && patientsBMI<=bmiRange.getToBMI()) // if bmi range fits patient
 				{
-					BMIGroup bmiGroup = patientsInjuryLevelGroup.getBmiGroups().get(bmiRangeName); // get bmi subgroup for injury level group of patient
+					BMIGroup patientsBmiGroup = patientsInjuryLevelGroup.getBmiGroups().get(bmiRangeName); // get bmi subgroup for injury level group of patient
 					
 					//assignmentCounter++;
 					
+					PatientOnChart patientOnChart = null;
 					if(patient.getSex()==Sex.MAN) //if patient is a man
 					{
-						bmiGroup.getPatientsOnChartMen().add(new PatientOnChart(patient,bmiGroup,this));
+						patientOnChart = new PatientOnChart(patient,patientsBmiGroup,this);
+						patient.setPatientOnChart(patientOnChart);
+						patientsBmiGroup.getPatientsOnChartMen().add(patientOnChart);
+						patientsBmiGroup.getShownPatientsOnChartMen().add(patientOnChart); //patient will be shown
 					}
 					else if (patient.getSex()==Sex.WOMAN) //if patient is a woman
 					{
-						bmiGroup.getPatientsOnChartWomen().add(new PatientOnChart(patient,bmiGroup,this));
+						patientOnChart = new PatientOnChart(patient,patientsBmiGroup,this);
+						patient.setPatientOnChart(patientOnChart);
+						patientsBmiGroup.getPatientsOnChartWomen().add(patientOnChart);
+						patientsBmiGroup.getShownPatientsOnChartWomen().add(patientOnChart); //patient will be shown
 					}
 					
+					//getChartChildren().add(patientOnChart.getRegion()); //add patient region to drawn chartChidren
+					
 					// patient was added to bmi subgroup and injury level group, so they are not empty
-					bmiGroup.setEmpty(false); 
-					bmiGroup.getInjuryLevelGroup().setEmpty(false);
+					patientsBmiGroup.setEmpty(false); 
+					patientsBmiGroup.getInjuryLevelGroup().setEmpty(false);
 					
 					//adding shown groups to shown collections
 					// TODO add to the sorting collection
-					if(!shownInjuryLevelGroups.contains(bmiGroup.getInjuryLevelGroup()))
+					if(!shownInjuryLevelGroups.containsValue(patientsBmiGroup.getInjuryLevelGroup()))
 					{
-						shownInjuryLevelGroups.add(bmiGroup.getInjuryLevelGroup());
+						shownInjuryLevelGroups.put(getIndexInInjuryLevel(patientsBmiGroup.getInjuryLevelGroup().getInjuryLevel()),patientsBmiGroup.getInjuryLevelGroup());
+						getChartChildren().add(patientsBmiGroup.getInjuryLevelGroup().getRegion());
 					}
-					if(!bmiGroup.getInjuryLevelGroup().getShownBMIGroups().contains(bmiGroup))
+					if(!patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().values().contains(patientsBmiGroup))
 					{
-						bmiGroup.getInjuryLevelGroup().getShownBMIGroups().add(bmiGroup);
+						patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().put(getIndexOfBMIRange(patientsBmiGroup.getBmiRange().getBmiRangeName()),patientsBmiGroup);
+						getChartChildren().add(patientsBmiGroup.getRegion());
+						getChartChildren().add(patientsBmiGroup.getMenRegion());
+						getChartChildren().add(patientsBmiGroup.getWomenRegion());
 					}
 				}
 			}
@@ -419,4 +413,67 @@ public class RingChart extends Chart
 		//System.out.println("Patients assigned: "+assignmentCounter);
 	}
 	
+	
+	
+	
+	private void createPatientsOnChartConnections(ObservableList<Patient> patients)
+	{
+		for(int i=0;i<patients.size()-1;i++)
+		{
+			for(int j=i+1;j<patients.size();j++)
+			{
+				Patient p1 = patients.get(i);
+				Patient p2 = patients.get(j);
+				
+				if(Math.abs(p1.getWnm()-p2.getWnm())<deltaWNM)
+				{
+					PatientsOnChartConnection connection = new PatientsOnChartConnection(p1.getPatientOnChart(), p2.getPatientOnChart());
+					patientsOnChartConnections.add(connection);
+					shownPatientsOnChartConnections.add(connection);
+				}
+			}
+		}
+		
+	}
+	
+	private void clearPatientsOnChartConnections()
+	{
+		patientsOnChartConnections.clear();
+		shownPatientsOnChartConnections.clear();		
+	}
+	
+	private void clearChartChildren()
+	{
+		getChartChildren().clear();
+	}
+	
+	private Integer getIndexInInjuryLevel(InjuryLevel injuryLevel)
+	{
+		int index = 0;
+		for(InjuryLevel injuryLevelValue:InjuryLevel.values())
+		{
+			if(injuryLevelValue==injuryLevel) 
+			{
+				return index;
+			}
+			index++;
+		}
+		return null;
+	}
+	
+	private Integer getIndexOfBMIRange(BMIRangeName bmiRangeName)
+	{
+		int index = 0;
+		for(BMIRangeName bmiRangeNameValue: BMIRangeName.values())
+		{
+			if(bmiRangeName==bmiRangeNameValue)
+			{
+				return index;
+			}
+			index++;
+		}
+		return null;
+	}
+	
+
 }

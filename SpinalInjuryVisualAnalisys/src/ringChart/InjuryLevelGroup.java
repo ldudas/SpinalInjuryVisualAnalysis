@@ -1,9 +1,9 @@
 package ringChart;
 
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import auxiliary.BMIRangeName;
 import auxiliary.InjuryLevel;
@@ -19,7 +19,7 @@ public class InjuryLevelGroup extends ChartGroup
 {
 
 	private Map<BMIRangeName,BMIGroup> bmiGroups;
-	private List<BMIGroup> shownBMIGroups;
+	private Map<Integer,BMIGroup> shownBMIGroups;
 	private InjuryLevel injuryLevel;
 	
 	private double value;
@@ -67,7 +67,7 @@ public class InjuryLevelGroup extends ChartGroup
     	super(ringChart);
 		this.injuryLevel = injuryLevel;
 		bmiGroups = new LinkedHashMap<BMIRangeName,BMIGroup>();
-		shownBMIGroups = new LinkedList<BMIGroup>();
+		shownBMIGroups = new TreeMap<Integer,BMIGroup>();
 		isEmpty = true;
 		
 		region.setBackground(new Background(new BackgroundFill(Color.DARKORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -100,11 +100,11 @@ public class InjuryLevelGroup extends ChartGroup
 	{
 		return bmiGroups;
 	}
-	public List<BMIGroup> getShownBMIGroups()
+	public Map<Integer, BMIGroup> getShownBMIGroups()
 	{
 		return shownBMIGroups;
 	}
-	public void setShownBMIGroups(List<BMIGroup> shownBMIGroups)
+	public void setShownBMIGroups(Map<Integer, BMIGroup> shownBMIGroups)
 	{
 		this.shownBMIGroups = shownBMIGroups;
 	}

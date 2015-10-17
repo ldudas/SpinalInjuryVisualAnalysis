@@ -20,11 +20,13 @@ public class BMIGroup extends ChartGroup
 {
 
 	private List<PatientOnChart> patientsOnChartMen;
+	private List<PatientOnChart> shownPatientsOnChartMen;
 	private Region menRegion;
 	private Arc outerArcMen;
 	private Arc innerArcMen;
 	
 	private List<PatientOnChart> patientsOnChartWomen;
+	private List<PatientOnChart> shownPatientsOnChartWomen;
 	private Region womenRegion;
 	private Arc outerArcWomen;
 	private Arc innerArcWomen;
@@ -74,7 +76,9 @@ public class BMIGroup extends ChartGroup
     	this.injuryLevelGroup = injuryLevelGroup;
     	this.bmiRange = bmiRange;
     	patientsOnChartMen = new LinkedList<PatientOnChart>();
+    	shownPatientsOnChartMen = new LinkedList<PatientOnChart>();
     	patientsOnChartWomen = new LinkedList<PatientOnChart>();
+    	shownPatientsOnChartWomen = new LinkedList<PatientOnChart>();
     	isEmpty = true;
     	
     	outerArcMen= new Arc();
@@ -108,8 +112,6 @@ public class BMIGroup extends ChartGroup
 		womenRegion.setBackground(new Background(new BackgroundFill(Color.LIGHTCORAL, CornerRadii.EMPTY, Insets.EMPTY)));
 		womenRegion.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
 		
-		ringChart.getChartChildren().add(menRegion);
-		ringChart.getChartChildren().add(womenRegion);
 		
 	}
     
@@ -209,5 +211,21 @@ public class BMIGroup extends ChartGroup
 	public void setInnerArcWomen(Arc innerArcWomen)
 	{
 		this.innerArcWomen = innerArcWomen;
+	}
+	public List<PatientOnChart> getShownPatientsOnChartMen()
+	{
+		return shownPatientsOnChartMen;
+	}
+	public void setShownPatientsOnChartMen(List<PatientOnChart> shownPatientsOnChartMen)
+	{
+		this.shownPatientsOnChartMen = shownPatientsOnChartMen;
+	}
+	public List<PatientOnChart> getShownPatientsOnChartWomen()
+	{
+		return shownPatientsOnChartWomen;
+	}
+	public void setShownPatientsOnChartWomen(List<PatientOnChart> shownPatientsOnChartWomen)
+	{
+		this.shownPatientsOnChartWomen = shownPatientsOnChartWomen;
 	}
 }
