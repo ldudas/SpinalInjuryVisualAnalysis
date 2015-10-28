@@ -25,40 +25,9 @@ public class InjuryLevelGroup extends ChartGroup
 	private double value;
 	
 	
-	private BooleanProperty shown = new BooleanPropertyBase(true) 
-	{
-
-		@Override public void invalidated() 
-		{
-          System.out.println("InjuryLevelGroup: invalidated() - ");
-        }
-		
-		@Override
-		public Object getBean()
-		{
-			return ringChart;
-		}
-
-		@Override
-		public String getName()
-		{
-			return "shown";
-		}
 	
-	};
-	public final void setShown(boolean value) 
-	{ 
-		shown.setValue(value);
-	}
-    public final boolean isShown() 
-    { 
-    	return shown.getValue();
-    }
-    
-    public final BooleanProperty shownProperty() 
-    { 
-    	return shown;
-    }
+	
+
     
     
     
@@ -111,4 +80,35 @@ public class InjuryLevelGroup extends ChartGroup
 		this.shownBMIGroups = shownBMIGroups;
 	}
     
+	@Override
+	public final void setShown(boolean value) 
+	{ 
+		if(value)
+		{
+			
+		}
+		else
+		{
+			for(BMIGroup bmiGroup:shownBMIGroups.values())
+			{
+				bmiGroup.hideWithoutRelayout();
+				bmiGroup.setShownUnchecked(false);
+			}
+			shownBMIGroups.clear();
+			
+			ringChart.getShownInjuryLevelGroups().values().remove(this);
+			
+			ringChart.getChartChildren().removeAll(region,text,textDotRegion);
+			
+			ringChart.requestChartLayout();
+		}
+		
+		shown = value;
+	}
+	
+	public void setShownUnchecked(boolean value)
+	{
+		shown = value;
+	}
+ 
 }

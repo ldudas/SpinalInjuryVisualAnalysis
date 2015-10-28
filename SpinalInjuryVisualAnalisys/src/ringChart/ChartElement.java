@@ -7,6 +7,7 @@ public abstract class ChartElement
 {
 	protected RingChart ringChart;
 	protected Region region;
+	protected boolean shown;
 	
 	public ChartElement(RingChart ringChart)
 	{
@@ -35,6 +36,16 @@ public abstract class ChartElement
 	public void setRegion(Region region)
 	{
 		this.region = region;
+	}
+
+	public boolean isShown()
+	{
+		return shown;
+	}
+
+	public void setShown(boolean shown)
+	{
+		this.shown = shown;
 	}
 	
 }

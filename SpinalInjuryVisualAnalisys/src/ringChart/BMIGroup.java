@@ -1,5 +1,6 @@
 package ringChart;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -34,40 +35,7 @@ public class BMIGroup extends ChartGroup
 	
 	private InjuryLevelGroup injuryLevelGroup;
 	private BMIRange bmiRange;
-	private BooleanProperty shown = new BooleanPropertyBase(true) 
-	{
-
-		@Override public void invalidated() 
-		{
-          System.out.println("BMIGroup: invalidated() - ");
-        }
-		
-		@Override
-		public Object getBean()
-		{
-			return ringChart;
-		}
-
-		@Override
-		public String getName()
-		{
-			return "shown";
-		}
-	
-	};
-	public final void setShown(boolean value) 
-	{ 
-		shown.setValue(value);
-	}
-    public final boolean isShown() 
-    { 
-    	return shown.getValue();
-    }
     
-    public final BooleanProperty shownProperty() 
-    { 
-    	return shown;
-    }
     
     
     public BMIGroup(InjuryLevelGroup injuryLevelGroup, BMIRange bmiRange, RingChart ringChart)
@@ -114,6 +82,50 @@ public class BMIGroup extends ChartGroup
 		
 		text.setText(bmiRange.getBmiRangeName().toString().charAt(0)+"");
 	}
+    
+    
+    public void hideWithoutRelayout()
+    {
+    	Collection<BMIGroup> shownBMIGroups =  injuryLevelGroup.getShownBMIGroups().values();
+    	List<PatientsOnChartConnection> connectionsToHide = new LinkedList<>();
+  	  
+  	  
+  	  for(PatientOnChart patientMan: shownPatientsOnChartMen)
+  	  {
+  		  ringChart.getChartChildren().remove(patientMan.getRegion());
+  		  for(PatientsOnChartConnection connection: ringChart.getShownPatientsOnChartConnections())
+      	  {
+      		  if(connection.getPatientFrom()==patientMan || connection.getPatientTo()==patientMan)
+      		  {
+      			  connectionsToHide.add(connection);
+      			  ringChart.getChartChildren().remove(connection.getQuadCurve());
+      		  }
+      	  }
+  		patientMan.setShownUnchecked(false);
+  	  }
+  	  shownPatientsOnChartMen.clear();
+  	  
+  	  for(PatientOnChart patientWoman: shownPatientsOnChartWomen)
+  	  {
+  		  ringChart.getChartChildren().remove(patientWoman.getRegion());
+  		  for(PatientsOnChartConnection connection: ringChart.getShownPatientsOnChartConnections())
+      	  {
+      		  if(connection.getPatientFrom()==patientWoman || connection.getPatientTo()==patientWoman)
+      		  {
+      			  connectionsToHide.add(connection);
+      			  ringChart.getChartChildren().remove(connection.getQuadCurve());
+      		  }
+      	  }
+  		patientWoman.setShownUnchecked(false);
+  	  }
+  	  shownPatientsOnChartWomen.clear();
+  	  
+  	  ringChart.getShownPatientsOnChartConnections().removeAll(connectionsToHide);
+  	
+  	  ringChart.getChartChildren().removeAll(menRegion,womenRegion,region,text,textDotRegion);
+  	  
+  	  
+    }
     
 	public RingChart getRingChart()
 	{
@@ -228,4 +240,37 @@ public class BMIGroup extends ChartGroup
 	{
 		this.shownPatientsOnChartWomen = shownPatientsOnChartWomen;
 	}
+	
+	@Override
+	public final void setShown(boolean value) 
+	{ 
+		 if(value)
+         {
+       	  
+         }
+         else
+         {
+       	  
+       	  Collection<BMIGroup> shownBMIGroups =  injuryLevelGroup.getShownBMIGroups().values();
+       	  
+       	  if(shownBMIGroups.size() == 1 )
+       	  {
+       		  injuryLevelGroup.setShown(false);
+       		  System.out.println("Dawej Stasiek!");
+       	  }
+       	  else
+       	  {
+	        	 hideWithoutRelayout(); 
+	        	 shownBMIGroups.remove(BMIGroup.this);
+	        	 ringChart.requestChartLayout();
+       	  }
+       	  
+         }
+	}
+	
+	public void setShownUnchecked(boolean value)
+	{
+		shown = value;
+	}
+
 }

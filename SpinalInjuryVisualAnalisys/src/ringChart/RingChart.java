@@ -162,7 +162,23 @@ public class RingChart extends Chart
 	 
 	/*------------------- CONSTRUCTORS ------------------------------------------------------------*/
 	
-	 public RingChart(ObservableList<Patient> patients)
+	 public List<PatientsOnChartConnection> getShownPatientsOnChartConnections()
+	{
+		return shownPatientsOnChartConnections;
+	}
+	public void setShownPatientsOnChartConnections(List<PatientsOnChartConnection> shownPatientsOnChartConnections)
+	{
+		this.shownPatientsOnChartConnections = shownPatientsOnChartConnections;
+	}
+	public Map<Integer, InjuryLevelGroup> getShownInjuryLevelGroups()
+	{
+		return shownInjuryLevelGroups;
+	}
+	public void setShownInjuryLevelGroups(Map<Integer, InjuryLevelGroup> shownInjuryLevelGroups)
+	{
+		this.shownInjuryLevelGroups = shownInjuryLevelGroups;
+	}
+	public RingChart(ObservableList<Patient> patients)
 	{
 		System.out.println("RingChart: constructor(patients). List size: "+patients.size());
 		injuryLevelGroups = new LinkedHashMap<InjuryLevel, InjuryLevelGroup>();
@@ -660,11 +676,13 @@ public class RingChart extends Chart
 					{
 						shownInjuryLevelGroups.put(getIndexInInjuryLevel(patientsBmiGroup.getInjuryLevelGroup().getInjuryLevel()),patientsBmiGroup.getInjuryLevelGroup());
 						getChartChildren().addAll(patientsBmiGroup.getInjuryLevelGroup().getRegion(),patientsBmiGroup.getInjuryLevelGroup().getTextDotRegion(),patientsBmiGroup.getInjuryLevelGroup().getText());
+						addInjuryLevelGroupListener(patientsBmiGroup.getInjuryLevelGroup());
 					}
 					if(!patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().values().contains(patientsBmiGroup))
 					{
 						patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().put(getIndexOfBMIRange(patientsBmiGroup.getBmiRange().getBmiRangeName()),patientsBmiGroup);
 						getChartChildren().addAll(patientsBmiGroup.getRegion(),patientsBmiGroup.getMenRegion(),patientsBmiGroup.getWomenRegion(),patientsBmiGroup.getTextDotRegion(),patientsBmiGroup.getText());
+						addBMIGroupListener(patientsBmiGroup);
 					}
 					
 					getChartChildren().add(patientOnChart.getRegion());
@@ -683,6 +701,33 @@ public class RingChart extends Chart
 	
 	
 	
+	private void addInjuryLevelGroupListener(InjuryLevelGroup injuryLevelGroup)
+	{
+		Region injuryLevelRegion = injuryLevelGroup.getRegion();
+		
+		injuryLevelRegion.addEventHandler(MouseEvent.MOUSE_PRESSED,
+		         new EventHandler<MouseEvent>() 
+				{
+		         @Override public void handle(MouseEvent e) 
+		         {
+		        	 injuryLevelGroup.setShown(false);
+		         }
+				});
+		
+	}
+	private void addBMIGroupListener(BMIGroup patientsBmiGroup)
+	{
+		Region bmiGroupRegion = patientsBmiGroup.getRegion();
+		
+		bmiGroupRegion.addEventHandler(MouseEvent.MOUSE_PRESSED,
+		         new EventHandler<MouseEvent>() 
+				{
+		         @Override public void handle(MouseEvent e) 
+		         {
+		        	 patientsBmiGroup.setShown(false);
+		         }
+				});
+	}
 	private void addPatientsRegionListener(PatientOnChart patientOnChart)
 	{
 		Region patientsRegion = patientOnChart.getRegion();
@@ -692,7 +737,7 @@ public class RingChart extends Chart
 		{
          @Override public void handle(MouseEvent e) 
          {
-        	 if(chosenPatient==null)
+        	/* if(chosenPatient==null)
         	 {
         		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         		 
@@ -721,7 +766,11 @@ public class RingChart extends Chart
     				 patientTo.getRegion().setBackground(new Background(new BackgroundFill(Color.CHARTREUSE, CornerRadii.EMPTY, Insets.EMPTY)));
     				 patientsFromChosenPatientConnections.add(patientTo);
     			 }
-    		 }
+        	 
+        	 
+    		 }*/
+        	 
+        	 patientOnChart.setShown(false);
 
          }
      });
