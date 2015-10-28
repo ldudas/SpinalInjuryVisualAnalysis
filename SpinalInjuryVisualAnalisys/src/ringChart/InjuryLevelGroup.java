@@ -72,6 +72,8 @@ public class InjuryLevelGroup extends ChartGroup
 		
 		region.setBackground(new Background(new BackgroundFill(Color.DARKORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
 		region.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
+		
+		text.setText(injuryLevel.toString());
 	}
     
    

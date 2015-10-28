@@ -34,6 +34,8 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 public class RingChart extends Chart
@@ -43,8 +45,9 @@ public class RingChart extends Chart
 	private static double injuryLevelBmiGap = 1;
 	private static double radiusMultiplierInnerBmi = 0.9;
 	private static double deltaWNM = 0.1;
-	private static double patientsGap = 10;
-	private static double patientRegionRadius = 10;
+	private static double patientRegionRadius = 4;
+	private static double patientsGap = patientRegionRadius*1.5;
+	
 	
 	
 	
@@ -194,16 +197,16 @@ public class RingChart extends Chart
         	{
         		double radiusMen = bmiGroup.getShownPatientsOnChartMen().size()*(patientsGap+2*patientRegionRadius)+patientsGap;
         		double angleMen = normalizeAngle(startAngleBMIGroup+(sizeOfBMIRingPart/4));
-        		double actXPadMen = calcX(angleMen,radiusMen,0);
-        		double actYPadMen = calcY(angleMen,radiusMen,0);
+        		double currXPadMen = calcX(angleMen,radiusMen,0);
+        		double currYPadMen = calcY(angleMen,radiusMen,0);
         		
         		double radiusWomen = bmiGroup.getShownPatientsOnChartWomen().size()*(patientsGap+2*patientRegionRadius)+patientsGap;
         		double angleWomen = normalizeAngle(startAngleBMIGroup+(3*sizeOfBMIRingPart/4));
-        		double actXPadWomen = calcX(angleWomen,radiusWomen,0);
+        		double currXPadWomen = calcX(angleWomen,radiusWomen,0);
         		double actYPadWomen = calcY(angleWomen,radiusWomen,0);
         		
-        		double maxXPad = 2 * Math.max(Math.abs(actXPadMen), Math.abs(actXPadWomen)); 
-        		double maxYPad = 2 * Math.max(Math.abs(actYPadMen), Math.abs(actYPadWomen));
+        		double maxXPad = 2 * Math.max(Math.abs(currXPadMen), Math.abs(currXPadWomen)); 
+        		double maxYPad = 2 * Math.max(Math.abs(currYPadMen), Math.abs(actYPadWomen));
         		
         		xPad = Math.max(xPad, maxXPad);
         		yPad = Math.max(yPad, maxYPad);
@@ -229,7 +232,7 @@ public class RingChart extends Chart
         double outerBMIArcRadius = innerInjuryArcRadius - injuryLevelBmiGap;
         double innerBMIArcRadius = outerBMIArcRadius * radiusMultiplierInnerBmi;
         
-        
+        List<Text> drawnTexts = new LinkedList<Text>();
         for(InjuryLevelGroup injuryGroup: shownInjuryLevelGroups.values())
         {
         	
@@ -253,7 +256,25 @@ public class RingChart extends Chart
                 ringPartRegion.setLayoutX(centerX);
                 ringPartRegion.setLayoutY(centerY);
                 
+                //drawing text
+                double injuryGroupCenterAngle = startAngle + sizeOfRingPart / 2;
+                double textInjuryX = calcX(injuryGroupCenterAngle, radiusOuterInjuryLevel-(radiusOuterInjuryLevel-innerInjuryArcRadius)/2, centerX);
+                double textInjuryY = calcY(injuryGroupCenterAngle, radiusOuterInjuryLevel-(radiusOuterInjuryLevel-innerInjuryArcRadius)/2, centerY);
+                double fontInjurySize = (radiusOuterInjuryLevel-innerInjuryArcRadius)/2;
                 
+                Region textInjuryDot = injuryGroup.getTextDotRegion();
+                textInjuryDot.setLayoutX(textInjuryX);
+                textInjuryDot.setLayoutY(textInjuryY);
+                ((Circle)textInjuryDot.getShape()).setRadius(fontInjurySize/3);
+                
+                
+                Text textInjuryGroup = injuryGroup.getText();
+                Font fontInjuryGroup = new Font("Verdana", fontInjurySize);
+                textInjuryGroup.setFont(fontInjuryGroup);
+                textInjuryGroup.setLayoutX(textInjuryX);
+                textInjuryGroup.setLayoutY(textInjuryY);
+                
+                drawnTexts.add(textInjuryGroup);
                 
                 // drawing bmi subgroup ring parts
                 
@@ -286,7 +307,24 @@ public class RingChart extends Chart
                         ringPartBMIRegion.setLayoutX(centerX);
                         ringPartBMIRegion.setLayoutY(centerY);
                         
+                        //drawing text
+                        double bmiArcCenterAngle = startAngleBMIGroup + sizeOfBMIRingPart/2;
+                        double textBmiX = calcX(bmiArcCenterAngle, outerBMIArcRadius-(outerBMIArcRadius-innerBMIArcRadius)/2, centerX);
+                        double textBmiY = calcY(bmiArcCenterAngle, outerBMIArcRadius-(outerBMIArcRadius-innerBMIArcRadius)/2, centerY);
+                        double fontBMISize = (outerBMIArcRadius-innerBMIArcRadius)/2.5;
                         
+                        Region textBMIDot = bmiGroup.getTextDotRegion();
+                        textBMIDot.setLayoutX(textBmiX);
+                        textBMIDot.setLayoutY(textBmiY);
+                        ((Circle)textBMIDot.getShape()).setRadius(fontBMISize/5);
+                        
+                        Text textBMIGroup = bmiGroup.getText();
+                        Font fontBMIGroup = new Font("Verdana", fontBMISize);
+                        textBMIGroup.setFont(fontBMIGroup);
+                        textBMIGroup.setLayoutX(textBmiX);
+                        textBMIGroup.setLayoutY(textBmiY);
+                        
+                        drawnTexts.add(textBMIGroup);
                         
                         
                         
@@ -472,6 +510,8 @@ public class RingChart extends Chart
             curve.setStroke(gradientForCoordinates(firstX,firstY,secondX,secondY,stops));
         	
         }
+        
+        drawnTexts.stream().forEach(text->text.toFront());
     
 	}
        
@@ -584,18 +624,15 @@ public class RingChart extends Chart
 					patientsBmiGroup.getInjuryLevelGroup().setEmpty(false);
 					
 					//adding shown groups to shown collections
-					// TODO add to the sorting collection
 					if(!shownInjuryLevelGroups.containsValue(patientsBmiGroup.getInjuryLevelGroup()))
 					{
 						shownInjuryLevelGroups.put(getIndexInInjuryLevel(patientsBmiGroup.getInjuryLevelGroup().getInjuryLevel()),patientsBmiGroup.getInjuryLevelGroup());
-						getChartChildren().add(patientsBmiGroup.getInjuryLevelGroup().getRegion());
+						getChartChildren().addAll(patientsBmiGroup.getInjuryLevelGroup().getRegion(),patientsBmiGroup.getInjuryLevelGroup().getTextDotRegion(),patientsBmiGroup.getInjuryLevelGroup().getText());
 					}
 					if(!patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().values().contains(patientsBmiGroup))
 					{
 						patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().put(getIndexOfBMIRange(patientsBmiGroup.getBmiRange().getBmiRangeName()),patientsBmiGroup);
-						getChartChildren().add(patientsBmiGroup.getRegion());
-						getChartChildren().add(patientsBmiGroup.getMenRegion());
-						getChartChildren().add(patientsBmiGroup.getWomenRegion());
+						getChartChildren().addAll(patientsBmiGroup.getRegion(),patientsBmiGroup.getMenRegion(),patientsBmiGroup.getWomenRegion(),patientsBmiGroup.getTextDotRegion(),patientsBmiGroup.getText());
 					}
 					
 					getChartChildren().add(patientOnChart.getRegion());

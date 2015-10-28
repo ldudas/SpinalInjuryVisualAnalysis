@@ -92,7 +92,7 @@ public class BMIGroup extends ChartGroup
 		outerArcWomen.setType(ArcType.ROUND);
     	
     	region.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
-		region.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
+    	region.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
 		
 		menRegion = new Region();
 		menRegion.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
@@ -112,7 +112,7 @@ public class BMIGroup extends ChartGroup
 		womenRegion.setBackground(new Background(new BackgroundFill(Color.LIGHTCORAL, CornerRadii.EMPTY, Insets.EMPTY)));
 		womenRegion.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
 		
-		
+		text.setText(bmiRange.getBmiRangeName().toString().charAt(0)+"");
 	}
     
 	public RingChart getRingChart()
