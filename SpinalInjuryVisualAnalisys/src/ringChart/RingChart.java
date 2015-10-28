@@ -28,6 +28,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Circle;
@@ -37,13 +38,13 @@ import javafx.util.Duration;
 
 public class RingChart extends Chart
 {
-	
+	private static double minRadiusOuterInjuryLevel = 5;
 	private static double radiusMultiplierInnerInjuryLevel = 0.9;
 	private static double injuryLevelBmiGap = 1;
 	private static double radiusMultiplierInnerBmi = 0.9;
 	private static double deltaWNM = 0.1;
 	private static double patientsGap = 10;
-	private static double patientRegionRadius = 4;
+	private static double patientRegionRadius = 10;
 	
 	
 	
@@ -217,8 +218,10 @@ public class RingChart extends Chart
         
         
        radiusOuterInjuryLevel = Math.min(width-xPad,height-yPad) / 2;
+       if(radiusOuterInjuryLevel<minRadiusOuterInjuryLevel) radiusOuterInjuryLevel=minRadiusOuterInjuryLevel;
        
-        //System.out.println(shownLevelGroups);
+       
+     
         
        // double sizeOfRingPart = (numbOfShownInjuryLevelGroups != 0) ? 360.0 / numbOfShownInjuryLevelGroups : 0;   
         double startAngle = getCurrentStartAngle();
@@ -343,6 +346,7 @@ public class RingChart extends Chart
                         
                         double pointsDistanceMen = pointsDistance(xManArcWidthFirstPoint, yManArcWidthFirstPoint, xManArcWidthSecondPoint, yManArcWidthSecondPoint);
                         int manCounter = 1;
+                        double patientMenRadius = 0d;
                         for(PatientOnChart patientOnChatMen:bmiGroup.getShownPatientsOnChartMen())
                         {
                         	double regionX; 
@@ -362,8 +366,13 @@ public class RingChart extends Chart
                         	Region patientOnChartMenRegion = patientOnChatMen.getRegion();
                         	patientOnChartMenRegion.setLayoutX(regionX);
                         	patientOnChartMenRegion.setLayoutY(regionY);
-                        	double patientRadius = pointsDistanceMen<2*patientRegionRadius? pointsDistanceMen/2:patientRegionRadius;
-                        	((Circle)patientOnChartMenRegion.getShape()).setRadius(patientRadius);
+                        	
+                        	if(manCounter==1)
+                        	{
+                        		patientMenRadius = pointsDistanceMen<2*patientRegionRadius? pointsDistanceMen/2:patientRegionRadius;
+                        	}
+                        	
+                        	((Circle)patientOnChartMenRegion.getShape()).setRadius(patientMenRadius);
                         	manCounter++;
                         }
                         
@@ -376,6 +385,7 @@ public class RingChart extends Chart
                         double pointsDistanceWomen = pointsDistance(xWomanArcWidthFirstPoint, yWomanArcWidthFirstPoint, xWomanArcWidthSecondPoint, yWomanArcWidthSecondPoint);
                         
                         int womanCounter = 1;
+                        double patientWomenRadius=0d;
                         for(PatientOnChart patientOnChatWomen:bmiGroup.getShownPatientsOnChartWomen())
                         {
                         	double regionX; 
@@ -395,8 +405,13 @@ public class RingChart extends Chart
                         	Region patientOnChartWomenRegion = patientOnChatWomen.getRegion();
                         	patientOnChartWomenRegion.setLayoutX(regionX);
                         	patientOnChartWomenRegion.setLayoutY(regionY);
-                        	double patientRadius = pointsDistanceWomen<2*patientRegionRadius? pointsDistanceWomen/2:patientRegionRadius;
-                        	((Circle)patientOnChartWomenRegion.getShape()).setRadius(patientRadius);
+                        	
+                        	if(womanCounter==1)
+                        	{
+                        		patientWomenRadius = pointsDistanceWomen<2*patientRegionRadius? pointsDistanceWomen/2:patientRegionRadius;
+                        	}
+                        	
+                        	((Circle)patientOnChartWomenRegion.getShape()).setRadius(patientWomenRadius);
                         	womanCounter++;
                         }
                         
@@ -450,12 +465,11 @@ public class RingChart extends Chart
         	curve.setEndX(secondX);
         	curve.setEndY(secondY);
         	curve.setControlX(centerX);
-        	curve.setControlY(centerY);
+        	curve.setControlY(centerY);   
         	
         	Stop[] stops = new Stop[] { new Stop(0, Color.YELLOW), new Stop(1, Color.RED)};
-            LinearGradient lg = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stops);
-        	
-            curve.setStroke(lg);
+            
+            curve.setStroke(gradientForCoordinates(firstX,firstY,secondX,secondY,stops));
         	
         }
     
@@ -464,6 +478,7 @@ public class RingChart extends Chart
         
        
     
+	
 	
 	
 	/*------------------- private methods ---------------------------------------------------------*/
@@ -670,6 +685,51 @@ public class RingChart extends Chart
               requestChartLayout();
           }
 			
+	}
+	 
+
+	private Paint gradientForCoordinates(double firstX, double firstY, double secondX, double secondY, Stop[] stops)
+	{
+		double yDiff = Math.abs(secondY-firstY);
+        double xDiff = Math.abs(secondX-firstX);
+        
+        double side = Math.max(xDiff, yDiff);
+        
+        double gradStartX=0d;
+        double gradStartY=0d;
+        double gradAddY=0d;
+        double gradAddX=0d;
+        
+        if(secondX>firstX && secondY>=firstY)
+        {
+        	gradStartX = 0;
+        	gradStartY = 0;
+        	gradAddX = xDiff / side;
+        	gradAddY = yDiff / side;
+        }
+        else if (secondX<=firstX && secondY>firstY)
+        {
+        	gradStartX = 1;
+        	gradStartY = 0;
+        	gradAddX = - xDiff / side;
+        	gradAddY = yDiff / side;
+        }
+        else if (secondX<firstX && secondY<=firstY)
+        {
+        	gradStartX = 1;
+        	gradStartY = 1;
+        	gradAddX = - xDiff / side;
+        	gradAddY = - yDiff / side;
+        }
+        else if (secondX>=firstX && secondY<firstY)
+        {
+        	gradStartX = 0;
+        	gradStartY = 1;
+        	gradAddX = xDiff / side;
+        	gradAddY = - yDiff / side;
+        }
+        
+        return  new LinearGradient(gradStartX, gradStartY, gradStartX+gradAddX, gradStartY+gradAddY, true, CycleMethod.NO_CYCLE, stops);
 	}
 	
 	 //wylicz x na podstawie k¹ta, d³ugoœci ramienia i x œrodka

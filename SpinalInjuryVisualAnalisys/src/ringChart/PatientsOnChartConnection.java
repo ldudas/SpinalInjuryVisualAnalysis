@@ -1,9 +1,5 @@
 package ringChart;
 
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
 import javafx.scene.shape.QuadCurve;
 
 public class PatientsOnChartConnection
