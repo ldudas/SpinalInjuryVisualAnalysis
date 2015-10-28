@@ -24,6 +24,12 @@ import javafx.beans.property.ObjectPropertyBase;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
@@ -61,6 +67,10 @@ public class RingChart extends Chart
 	private double centerX;
 	private double centerY;
 	private double radiusOuterInjuryLevel;
+	
+	private PatientOnChart chosenPatient;
+	private List<PatientsOnChartConnection> hiddenChosenPatientConnections;
+	private List<PatientOnChart> patientsFromChosenPatientConnections;
 	
 	/* ------------------- PATIENTS LIST CHANGE LISTENER --------------------------------- */
 	
@@ -159,6 +169,8 @@ public class RingChart extends Chart
 		shownInjuryLevelGroups = new TreeMap<Integer,InjuryLevelGroup>();
 		patientsOnChartConnections = new LinkedList<PatientsOnChartConnection>();
 		shownPatientsOnChartConnections = new LinkedList<PatientsOnChartConnection>();
+		hiddenChosenPatientConnections = new LinkedList<PatientsOnChartConnection>();
+		patientsFromChosenPatientConnections = new LinkedList<PatientOnChart>();
 		createGroups();
 		setPatients(patients);
 		setLegend(legend);
@@ -515,7 +527,27 @@ public class RingChart extends Chart
     
 	}
        
-        
+    public void showHiddenConnections()
+    {
+    	if(chosenPatient!=null)
+    	{
+	    	chosenPatient.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+	    	chosenPatient=null;
+	    	
+	    	for(PatientsOnChartConnection hiddenConnection: hiddenChosenPatientConnections)
+	    	{
+	    		hiddenConnection.getQuadCurve().setOpacity(1.0);
+		 	}
+	    	
+	    	for(PatientOnChart patientFromPair: patientsFromChosenPatientConnections)
+	    	{
+	    		patientFromPair.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));;
+	    	}
+	    	
+		 	hiddenChosenPatientConnections.clear();
+		 	patientsFromChosenPatientConnections.clear();
+    	}
+    }
        
     
 	
@@ -636,6 +668,8 @@ public class RingChart extends Chart
 					}
 					
 					getChartChildren().add(patientOnChart.getRegion());
+					
+					addPatientsRegionListener(patientOnChart);
 				}
 			}
 			
@@ -649,6 +683,50 @@ public class RingChart extends Chart
 	
 	
 	
+	private void addPatientsRegionListener(PatientOnChart patientOnChart)
+	{
+		Region patientsRegion = patientOnChart.getRegion();
+		
+		patientsRegion.addEventHandler(MouseEvent.MOUSE_PRESSED,
+         new EventHandler<MouseEvent>() 
+		{
+         @Override public void handle(MouseEvent e) 
+         {
+        	 if(chosenPatient==null)
+        	 {
+        		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+        		 
+        		 chosenPatient=patientOnChart;
+        	 }
+        	 else
+        	 {
+        		 
+        		 showHiddenConnections();
+        		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+        		 
+        		 chosenPatient=patientOnChart;
+        	 }
+        	 
+        	 for(PatientsOnChartConnection connection: shownPatientsOnChartConnections)
+    		 {
+        		 PatientOnChart patientTo=null;
+    			 if(connection.getPatientFrom()!=patientOnChart && connection.getPatientTo()!=patientOnChart)
+    			 {
+    				 connection.getQuadCurve().setOpacity(0.0);
+    				 hiddenChosenPatientConnections.add(connection);
+    			 }
+    			 else
+    			 {
+    				 patientTo = connection.getPatientFrom()==patientOnChart ? connection.getPatientTo() : connection.getPatientFrom();
+    				 patientTo.getRegion().setBackground(new Background(new BackgroundFill(Color.CHARTREUSE, CornerRadii.EMPTY, Insets.EMPTY)));
+    				 patientsFromChosenPatientConnections.add(patientTo);
+    			 }
+    		 }
+
+         }
+     });
+		
+	}
 	private void createPatientsOnChartConnections(ObservableList<Patient> patients)
 	{
 		for(int i=0;i<patients.size()-1;i++)

@@ -38,7 +38,7 @@ public class Main extends Application
 	     stage.setScene(scene);
 	     stage.show();
 	     
-	     ringChart.getPatients().get(0).getPatientOnChart().getRegion().addEventHandler(MouseEvent.MOUSE_PRESSED,
+	    ringChart.getPatients().get(0).getPatientOnChart().getBmiGroup().getRegion().addEventHandler(MouseEvent.MOUSE_PRESSED,
 	                new EventHandler<MouseEvent>() {
              @Override public void handle(MouseEvent e) {
                 Region reg =(Region) e.getSource();
@@ -46,6 +46,15 @@ public class Main extends Application
    
               }
          });
+	    
+	    ringChart.getPatients().get(0).getPatientOnChart().getBmiGroup().getInjuryLevelGroup().getRegion().addEventHandler(MouseEvent.MOUSE_PRESSED,
+                new EventHandler<MouseEvent>() {
+         @Override public void handle(MouseEvent e) {
+            Region reg =(Region) e.getSource();
+           ringChart.showHiddenConnections();
+
+          }
+     });
 		
 	}
 

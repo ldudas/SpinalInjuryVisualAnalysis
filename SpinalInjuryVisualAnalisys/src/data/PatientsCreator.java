@@ -43,6 +43,11 @@ public class PatientsCreator
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C3, 10, 0.1), //20,7
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C3, 10, 0.1), //26,3
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C3, 10, 0.1), //34,6
+	    		 
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C3, 10, 0.1), //26,3
+	    		 new Patient("Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C3, 10, 0.1) //34,6
+	    		 
+	    		 /*
 	    		//C3 kobiety
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C3, 10, 0.1), //18
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C3, 10, 0.1), //20,7
@@ -58,8 +63,8 @@ public class PatientsCreator
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C4, 10, 0.1), //18
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C4, 10, 0.1), //20,7
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C4, 10, 0.1), //26,3
-	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C4, 10, 0.1) //34,6
-	    		/* 
+	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C4, 10, 0.1), //34,6
+	    		 
 	    		//C5 mê¿czyŸni
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C5, 10, 0.1), //18
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C5, 10, 0.1), //20,7

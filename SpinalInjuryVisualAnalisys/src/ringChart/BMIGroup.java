@@ -91,8 +91,8 @@ public class BMIGroup extends ChartGroup
 		innerArcWomen.setType(ArcType.ROUND);
 		outerArcWomen.setType(ArcType.ROUND);
     	
-    	region.setBackground(new Background(new BackgroundFill(Color.GREENYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
-    	region.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
+    	region.setBackground(new Background(new BackgroundFill(Color.LIGHTGOLDENRODYELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+    	region.setStyle("-fx-border-color: grey; -fx-border-width: 0.5;");
 		
 		menRegion = new Region();
 		menRegion.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);

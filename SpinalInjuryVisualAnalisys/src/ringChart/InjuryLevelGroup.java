@@ -70,8 +70,8 @@ public class InjuryLevelGroup extends ChartGroup
 		shownBMIGroups = new TreeMap<Integer,BMIGroup>();
 		isEmpty = true;
 		
-		region.setBackground(new Background(new BackgroundFill(Color.DARKORANGE, CornerRadii.EMPTY, Insets.EMPTY)));
-		region.setStyle("-fx-border-color: -fx-background; -fx-border-width: 1;");
+		region.setBackground(new Background(new BackgroundFill(Color.MOCCASIN, CornerRadii.EMPTY, Insets.EMPTY)));
+		region.setStyle("-fx-border-color: black; -fx-border-width: 1;");
 		
 		text.setText(injuryLevel.toString());
 	}
