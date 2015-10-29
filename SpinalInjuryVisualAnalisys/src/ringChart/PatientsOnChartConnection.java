@@ -1,5 +1,7 @@
 package ringChart;
 
+import auxiliary.ConnectionEndColorPicker;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.QuadCurve;
 
 public class PatientsOnChartConnection
@@ -8,6 +10,7 @@ public class PatientsOnChartConnection
 	private PatientOnChart patientFrom;
 	private PatientOnChart patientTo;
 	private QuadCurve quadCurve;
+	private Stop[] quadCurveConnectionGradientStops;
 
 	public PatientsOnChartConnection(PatientOnChart patientFrom, PatientOnChart patientTo)
 	{	
@@ -17,6 +20,11 @@ public class PatientsOnChartConnection
 		quadCurve = new QuadCurve();
 		quadCurve.setFill(null);
 		quadCurve.setStrokeWidth(1.5);
+		
+		quadCurveConnectionGradientStops = new Stop[] { 
+														new Stop(0, ConnectionEndColorPicker.getConnectionEndColor(patientFrom)), 
+														new Stop(1, ConnectionEndColorPicker.getConnectionEndColor(patientTo))
+														};
 	}
 
 	
@@ -50,6 +58,18 @@ public class PatientsOnChartConnection
 	public void setQuadCurve(QuadCurve quadCurve)
 	{
 		this.quadCurve = quadCurve;
+	}
+
+
+	public Stop[] getQuadCurveConnectionGradientStops()
+	{
+		return quadCurveConnectionGradientStops;
+	}
+
+
+	public void setQuadCurveConnectionGradientStops(Stop[] quadCurveConnectionGradientStops)
+	{
+		this.quadCurveConnectionGradientStops = quadCurveConnectionGradientStops;
 	}
 	
 	

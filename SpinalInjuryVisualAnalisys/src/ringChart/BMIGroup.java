@@ -85,7 +85,6 @@ public class BMIGroup extends ChartGroup
     
     public void hideWithoutRelayout()
     {
-    	Collection<BMIGroup> shownBMIGroups =  injuryLevelGroup.getShownBMIGroups().values();
     	List<PatientsOnChartConnection> connectionsToHide = new LinkedList<>();
   	  
   	  

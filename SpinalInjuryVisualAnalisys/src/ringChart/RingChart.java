@@ -5,9 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import com.sun.javafx.charts.Legend;
-
+import com.sun.javafx.charts.Legend.LegendItem;
 import auxiliary.BMIRange;
 import auxiliary.BMIRangeFactory;
 import auxiliary.BMIRangeName;
@@ -26,6 +25,8 @@ import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Side;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -37,6 +38,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Paint;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.QuadCurve;
 import javafx.scene.shape.Shape;
@@ -50,7 +52,7 @@ public class RingChart extends Chart
 	private static double radiusMultiplierInnerInjuryLevel = 0.9;
 	private static double injuryLevelBmiGap = 1;
 	private static double radiusMultiplierInnerBmi = 0.9;
-	private static double deltaWNM = 0.1;
+	private static double deltaWNM = 0.04;
 	private static double patientRegionRadius = 4;
 	private static double patientsGap = patientRegionRadius*1.5;
 	
@@ -62,6 +64,7 @@ public class RingChart extends Chart
 	private List<PatientsOnChartConnection> patientsOnChartConnections;
 	private List<PatientsOnChartConnection> shownPatientsOnChartConnections;
 	
+	@SuppressWarnings("all")
 	private Legend legend = new Legend();
 	
 	private double centerX;
@@ -157,7 +160,7 @@ public class RingChart extends Chart
   	
   private DoubleProperty currentStartAngle = new SimpleDoubleProperty(this, "currentStartAngle");
 	 private double getCurrentStartAngle() {return currentStartAngle.getValue();}
-	 private void setCurrentStartAngle(double value) {currentStartAngle.setValue(value);}
+	 //private void setCurrentStartAngle(double value) {currentStartAngle.setValue(value);}
 	 private DoubleProperty currentStartAngleProperty() {return currentStartAngle;}
 	 
 	/*------------------- CONSTRUCTORS ------------------------------------------------------------*/
@@ -197,7 +200,7 @@ public class RingChart extends Chart
 		patientsFromChosenPatientConnections = new LinkedList<PatientOnChart>();
 		createGroups();
 		setPatients(patients);
-		setLegend(legend);
+		createLegend();
 		useChartContentMirroring = false;
 	}
 	 
@@ -540,10 +543,8 @@ public class RingChart extends Chart
         	curve.setEndY(secondY);
         	curve.setControlX(centerX);
         	curve.setControlY(centerY);   
-        	
-        	Stop[] stops = new Stop[] { new Stop(0, Color.YELLOW), new Stop(1, Color.RED)};
             
-            curve.setStroke(gradientForCoordinates(firstX,firstY,secondX,secondY,stops));
+            curve.setStroke(gradientForCoordinates(firstX,firstY,secondX,secondY,patientsConnection.getQuadCurveConnectionGradientStops()));
         	
         }
         
@@ -684,18 +685,22 @@ public class RingChart extends Chart
 					{
 						shownInjuryLevelGroups.put(InjuryLevel.getIndexInInjuryLevel(patientsBmiGroup.getInjuryLevelGroup().getInjuryLevel()),patientsBmiGroup.getInjuryLevelGroup());
 						getChartChildren().addAll(patientsBmiGroup.getInjuryLevelGroup().getRegion(),patientsBmiGroup.getInjuryLevelGroup().getTextDotRegion(),patientsBmiGroup.getInjuryLevelGroup().getText());
+						patientsBmiGroup.getInjuryLevelGroup().setShownUnchecked(true);
 						addInjuryLevelGroupListener(patientsBmiGroup.getInjuryLevelGroup());
 					}
 					if(!patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().values().contains(patientsBmiGroup))
 					{
 						patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().put(BMIRangeName.getIndexInBMIRangeName(patientsBmiGroup.getBmiRange().getBmiRangeName()),patientsBmiGroup);
 						getChartChildren().addAll(patientsBmiGroup.getRegion(),patientsBmiGroup.getMenRegion(),patientsBmiGroup.getWomenRegion(),patientsBmiGroup.getTextDotRegion(),patientsBmiGroup.getText());
+						patientsBmiGroup.setShownUnchecked(true);
 						addBMIGroupListener(patientsBmiGroup);
 					}
 					
 					getChartChildren().add(patientOnChart.getRegion());
 					
+					patientOnChart.setShownUnchecked(true);
 					addPatientsRegionListener(patientOnChart);
+					
 				}
 			}
 			
@@ -718,7 +723,7 @@ public class RingChart extends Chart
 				{
 		         @Override public void handle(MouseEvent e) 
 		         {
-		        	 injuryLevelGroup.setShown(false);
+		        	 //injuryLevelGroup.setShown(false);
 		         }
 				});
 		
@@ -732,7 +737,7 @@ public class RingChart extends Chart
 				{
 		         @Override public void handle(MouseEvent e) 
 		         {
-		        	 patientsBmiGroup.setShown(false);
+		        	// patientsBmiGroup.setShown(false);
 		         }
 				});
 	}
@@ -745,7 +750,7 @@ public class RingChart extends Chart
 		{
          @Override public void handle(MouseEvent e) 
          {
-        	/* if(chosenPatient==null)
+        	if(chosenPatient==null)
         	 {
         		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
         		 
@@ -776,9 +781,9 @@ public class RingChart extends Chart
     			 }
         	 
         	 
-    		 }*/
+    		 }
         	 
-        	 patientOnChart.setShown(false);
+        	// patientOnChart.setShown(false);
 
          }
      });
@@ -877,6 +882,84 @@ public class RingChart extends Chart
         
         return  new LinearGradient(gradStartX, gradStartY, gradStartX+gradAddX, gradStartY+gradAddY, true, CycleMethod.NO_CYCLE, stops);
 	}
+	
+	@SuppressWarnings("all")
+	private void createLegend() {
+        Node legendNode = getLegend(); //pobierz wierzcho³ek legendy
+        
+        //nie odswiezaj legendy kiedy uzytkownik ustawil legende
+        if (legendNode != null && legendNode != legend) return; // RT-23569 dont update when user has set legend.
+        
+        //ustaw flage- czy legenda jest pionowa
+        legend.setVertical(getLegendSide().equals(Side.LEFT) || getLegendSide().equals(Side.RIGHT));
+        //wyczysc zawartosc legendy
+        legend.getItems().clear();
+        
+
+         LegendItem legenditem1 = new LegendItem("Injury Level Group");
+         
+         Arc outerArc = new Arc();
+         outerArc.setStartAngle(90);
+         outerArc.setLength(-135);
+         outerArc.setRadiusX(12);
+         outerArc.setRadiusY(12);
+         outerArc.setType(ArcType.ROUND);
+         Arc innerArc = new Arc();
+         innerArc.setStartAngle(91);
+         innerArc.setLength(-136);
+         innerArc.setRadiusX(8);
+         innerArc.setRadiusY(8);
+         innerArc.setType(ArcType.ROUND);
+         Shape shape1 = Shape.subtract(outerArc, innerArc);
+         shape1.setFill(Color.MOCCASIN);
+         shape1.setStroke(Color.BLACK);
+         shape1.setStrokeWidth(0.75);
+        
+         legenditem1.setSymbol(shape1);
+         legend.getItems().add(legenditem1); 
+         
+         LegendItem legenditem2 = new LegendItem("BMI Group\n(Underweight,\nNormal,\nOverweight,\nAdiposity)");
+         Shape shape2 = Shape.subtract(outerArc, innerArc);
+         shape2.setFill(Color.LIGHTGOLDENRODYELLOW);
+         shape2.setStroke(Color.GREY);
+         shape2.setStrokeWidth(0.75);
+         legenditem2.setSymbol(shape2);
+         legend.getItems().add(legenditem2); 
+         
+         LegendItem legenditem3 = new LegendItem("Women Group");
+         Shape shape3 = Shape.subtract(outerArc, innerArc);
+         shape3.setFill(Color.LIGHTCORAL);
+         legenditem3.setSymbol(shape3);
+         legend.getItems().add(legenditem3); 
+         
+         LegendItem legenditem4 = new LegendItem("Men Group");
+         Shape shape4 = Shape.subtract(outerArc, innerArc);
+         shape4.setFill(Color.CORNFLOWERBLUE);
+         legenditem4.setSymbol(shape4);
+         legend.getItems().add(legenditem4); 
+         
+         LegendItem legenditem5 = new LegendItem("Patient");
+         Circle c5 = new Circle();
+         c5.setFill(Color.BLACK);
+         c5.setRadius(4);
+         legenditem5.setSymbol(c5);
+         legend.getItems().add(legenditem5);
+               
+        
+        //je¿eli legenda ma sk³adniki
+        if (legend.getItems().size() > 0) 
+        {
+        	//je¿eli pierwsze ustawienie legendy
+            if (legendNode == null) 
+            {
+                setLegend(legend); //ustaw legendê
+            }
+        }
+        else //je¿eli legenda nie ma sk³adników
+        {
+            setLegend(null); //ustaw legende na null
+        }
+    }
 	
 	 //wylicz x na podstawie k¹ta, d³ugoœci ramienia i x œrodka
     private static double calcX(double angle, double radius, double centerX) {

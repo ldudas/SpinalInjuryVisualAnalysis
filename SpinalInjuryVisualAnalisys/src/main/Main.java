@@ -5,10 +5,10 @@ import data.PatientsCreator;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import ringChart.RingChart;
 
@@ -33,6 +33,9 @@ public class Main extends Application
 	     ObservableList<Patient> ringChartData = PatientsCreator.getPatients();
 	     RingChart ringChart = new RingChart(ringChartData);
 	     ringChart.setTitle("Spinal Injury Patients");
+	     ringChart.setTitleSide(Side.TOP);
+	     ringChart.setLegendVisible(true);
+	     ringChart.setLegendSide(Side.LEFT);
 	     
 	     borderPane.setCenter(ringChart);
 	     stage.setScene(scene);
@@ -41,7 +44,7 @@ public class Main extends Application
 	    ringChart.getPatients().get(0).getPatientOnChart().getBmiGroup().getRegion().addEventHandler(MouseEvent.MOUSE_PRESSED,
 	                new EventHandler<MouseEvent>() {
              @Override public void handle(MouseEvent e) {
-                Region reg =(Region) e.getSource();
+                //Region reg =(Region) e.getSource();
                ringChart.setStartAngle(ringChart.getStartAngle()+90);
    
               }
@@ -50,7 +53,7 @@ public class Main extends Application
 	    ringChart.getPatients().get(0).getPatientOnChart().getBmiGroup().getInjuryLevelGroup().getRegion().addEventHandler(MouseEvent.MOUSE_PRESSED,
                 new EventHandler<MouseEvent>() {
          @Override public void handle(MouseEvent e) {
-            Region reg =(Region) e.getSource();
+            //Region reg =(Region) e.getSource();
            ringChart.showHiddenConnections();
 
           }

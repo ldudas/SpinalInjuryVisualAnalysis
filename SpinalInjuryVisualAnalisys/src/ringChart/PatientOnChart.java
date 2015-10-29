@@ -5,8 +5,6 @@ import java.util.List;
 
 import auxiliary.Patient;
 import auxiliary.Sex;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.BooleanPropertyBase;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;

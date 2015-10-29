@@ -68,6 +68,7 @@ import javafx.css.StyleableProperty;
  *
  * @since JavaFX 2.0
  */
+@SuppressWarnings("all")
 public abstract class Chart extends Region {
 
     // -------------- PRIVATE FIELDS -----------------------------------------------------------------------------------

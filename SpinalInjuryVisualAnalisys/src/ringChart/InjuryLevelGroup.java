@@ -1,14 +1,10 @@
 package ringChart;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
 import auxiliary.BMIRangeName;
 import auxiliary.InjuryLevel;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.BooleanPropertyBase;
 import javafx.geometry.Insets;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -24,13 +20,7 @@ public class InjuryLevelGroup extends ChartGroup
 	
 	private double value;
 	
-	
-	
-	
 
-    
-    
-    
     public InjuryLevelGroup(InjuryLevel injuryLevel,RingChart ringChart)
 	{
     	super(ringChart);
