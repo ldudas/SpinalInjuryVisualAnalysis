@@ -52,45 +52,66 @@ public class PatientOnChart extends ChartElement
 	@Override
 	public final void setShown(boolean value) 
 	{ 
-		if(value)
-        {
-      	  
-        }
-        else
-        {
-      	  List<PatientOnChart> shownPatientsList = patient.getSex() == Sex.MAN ? bmiGroup.getShownPatientsOnChartMen() : bmiGroup.getShownPatientsOnChartWomen();
-      	  List<PatientOnChart> shownPatientsList2 = patient.getSex() == Sex.MAN ? bmiGroup.getShownPatientsOnChartWomen() : bmiGroup.getShownPatientsOnChartMen();
-      	  
-      	  if(shownPatientsList.size()==1 && shownPatientsList2.isEmpty())
-      	  {
-      		  bmiGroup.setShown(false);
-      		  System.out.println("Dawej Marian!");
-      	  }
-      	  else
-      	  {
-	        	  shownPatientsList.remove(PatientOnChart.this);
-	        	  ringChart.getChartChildren().remove(PatientOnChart.this.region);
+		if(value!=shown)
+		{
+			List<PatientOnChart> shownPatientsList = patient.getSex() == Sex.MAN ? bmiGroup.getShownPatientsOnChartMen() : bmiGroup.getShownPatientsOnChartWomen();
+	      	List<PatientOnChart> shownPatientsList2 = patient.getSex() == Sex.MAN ? bmiGroup.getShownPatientsOnChartWomen() : bmiGroup.getShownPatientsOnChartMen();
+	      	  
+			
+			if(value)
+	        {
+				
+	      	  if(!shownPatientsList.isEmpty() || !shownPatientsList2.isEmpty())
+	      	  {
+	      		  shownPatientsList.add(PatientOnChart.this);
+	        	  ringChart.getChartChildren().add(PatientOnChart.this.region);
 	        	  
-	        	  List<PatientsOnChartConnection> connectionsToHide = new LinkedList<>();
-	        	  for(PatientsOnChartConnection connection: ringChart.getShownPatientsOnChartConnections())
+	        	  for(PatientsOnChartConnection connection: ringChart.getPatientsOnChartConnections())
 	        	  {
 	        		  if(connection.getPatientFrom()==PatientOnChart.this || connection.getPatientTo()==PatientOnChart.this)
 	        		  {
-	        			  connectionsToHide.add(connection);
-	        			  ringChart.getChartChildren().remove(connection.getQuadCurve());
+	        			  ringChart.getShownPatientsOnChartConnections().add(connection);
+	        			  ringChart.getChartChildren().add(connection.getQuadCurve());
 	        		  }
 	        	  }
 	        	  
-	        	  ringChart.getShownPatientsOnChartConnections().removeAll(connectionsToHide);
-	        	
 	        	  ringChart.requestChartLayout();
-	        	  
-      	  }
-      	  
-      	 
-        }
-		
-		shown = value;
+	      	  }
+	      	  
+	        }
+	        else
+	        {
+	      	
+	      	  if(shownPatientsList.size()==1 && shownPatientsList2.isEmpty())
+	      	  {
+	      		  bmiGroup.setShown(false);
+	      	  }
+	      	  else
+	      	  {
+		        	  shownPatientsList.remove(PatientOnChart.this);
+		        	  ringChart.getChartChildren().remove(PatientOnChart.this.region);
+		        	  
+		        	  List<PatientsOnChartConnection> connectionsToHide = new LinkedList<>();
+		        	  for(PatientsOnChartConnection connection: ringChart.getShownPatientsOnChartConnections())
+		        	  {
+		        		  if(connection.getPatientFrom()==PatientOnChart.this || connection.getPatientTo()==PatientOnChart.this)
+		        		  {
+		        			  connectionsToHide.add(connection);
+		        			  ringChart.getChartChildren().remove(connection.getQuadCurve());
+		        		  }
+		        	  }
+		        	  
+		        	  ringChart.getShownPatientsOnChartConnections().removeAll(connectionsToHide);
+		        	
+		        	  ringChart.requestChartLayout();
+		        	  
+	      	  }
+	      	  
+	      	 
+	        }
+			
+			shown = value;
+		}
 	}
 	
 	public void setShownUnchecked(boolean value)

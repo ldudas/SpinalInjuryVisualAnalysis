@@ -83,27 +83,40 @@ public class InjuryLevelGroup extends ChartGroup
 	@Override
 	public final void setShown(boolean value) 
 	{ 
-		if(value)
+		if(value!=shown)
 		{
-			
-		}
-		else
-		{
-			for(BMIGroup bmiGroup:shownBMIGroups.values())
+			if(value)
 			{
-				bmiGroup.hideWithoutRelayout();
-				bmiGroup.setShownUnchecked(false);
+				
+				ringChart.getShownInjuryLevelGroups().put(InjuryLevel.getIndexInInjuryLevel(injuryLevel),this);
+				
+				ringChart.getChartChildren().addAll(region,textDotRegion,text);
+				
+				for(BMIGroup bmiGroup:bmiGroups.values())
+				{
+					bmiGroup.setShown(true);
+				}
+				
+				ringChart.requestChartLayout();
 			}
-			shownBMIGroups.clear();
+			else
+			{
+				for(BMIGroup bmiGroup:shownBMIGroups.values())
+				{
+					bmiGroup.hideWithoutRelayout();
+					bmiGroup.setShownUnchecked(false);
+				}
+				shownBMIGroups.clear();
+				
+				ringChart.getShownInjuryLevelGroups().values().remove(this);
+				
+				ringChart.getChartChildren().removeAll(region,text,textDotRegion);
+				
+				ringChart.requestChartLayout();
+			}
 			
-			ringChart.getShownInjuryLevelGroups().values().remove(this);
-			
-			ringChart.getChartChildren().removeAll(region,text,textDotRegion);
-			
-			ringChart.requestChartLayout();
+			shown = value;
 		}
-		
-		shown = value;
 	}
 	
 	public void setShownUnchecked(boolean value)

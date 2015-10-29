@@ -5,8 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import auxiliary.BMIRange;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.BooleanPropertyBase;
+import auxiliary.BMIRangeName;
 import javafx.geometry.Insets;
 import javafx.geometry.NodeOrientation;
 import javafx.scene.layout.Background;
@@ -244,28 +243,44 @@ public class BMIGroup extends ChartGroup
 	@Override
 	public final void setShown(boolean value) 
 	{ 
-		 if(value)
-         {
-       	  
-         }
-         else
-         {
-       	  
-       	  Collection<BMIGroup> shownBMIGroups =  injuryLevelGroup.getShownBMIGroups().values();
-       	  
-       	  if(shownBMIGroups.size() == 1 )
-       	  {
-       		  injuryLevelGroup.setShown(false);
-       		  System.out.println("Dawej Stasiek!");
-       	  }
-       	  else
-       	  {
-	        	 hideWithoutRelayout(); 
-	        	 shownBMIGroups.remove(BMIGroup.this);
-	        	 ringChart.requestChartLayout();
-       	  }
-       	  
-         }
+		if(value!=shown)
+		{
+			 if(value)
+	         {
+	       	  
+				 ringChart.getChartChildren().addAll(menRegion,womenRegion,region,textDotRegion,text);
+			  	  
+				 
+				 for(PatientOnChart patientMan: patientsOnChartMen)
+			  	  {
+			  		patientMan.setShown(true);
+			  	  }
+				 
+				 for(PatientOnChart patientWoman: patientsOnChartWomen)
+			  	  {
+			  		patientWoman.setShown(true);
+			  	  }
+				 
+				 injuryLevelGroup.getShownBMIGroups().put(BMIRangeName.getIndexInBMIRangeName(this.getBmiRange().getBmiRangeName()),this);
+	         }
+	         else
+	         {
+	       	  
+	       	  Collection<BMIGroup> shownBMIGroups =  injuryLevelGroup.getShownBMIGroups().values();
+	       	  
+	       	  if(shownBMIGroups.size() == 1 )
+	       	  {
+	       		  injuryLevelGroup.setShown(false);
+	       	  }
+	       	  else
+	       	  {
+		        	 hideWithoutRelayout(); 
+		        	 shownBMIGroups.remove(BMIGroup.this);
+		        	 ringChart.requestChartLayout();
+	       	  }
+	       	  
+	         }
+		}
 	}
 	
 	public void setShownUnchecked(boolean value)

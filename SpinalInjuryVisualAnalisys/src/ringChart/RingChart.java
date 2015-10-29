@@ -178,6 +178,14 @@ public class RingChart extends Chart
 	{
 		this.shownInjuryLevelGroups = shownInjuryLevelGroups;
 	}
+	public List<PatientsOnChartConnection> getPatientsOnChartConnections()
+	{
+		return patientsOnChartConnections;
+	}
+	public void setPatientsOnChartConnections(List<PatientsOnChartConnection> patientsOnChartConnections)
+	{
+		this.patientsOnChartConnections = patientsOnChartConnections;
+	}
 	public RingChart(ObservableList<Patient> patients)
 	{
 		System.out.println("RingChart: constructor(patients). List size: "+patients.size());
@@ -674,13 +682,13 @@ public class RingChart extends Chart
 					//adding shown groups to shown collections
 					if(!shownInjuryLevelGroups.containsValue(patientsBmiGroup.getInjuryLevelGroup()))
 					{
-						shownInjuryLevelGroups.put(getIndexInInjuryLevel(patientsBmiGroup.getInjuryLevelGroup().getInjuryLevel()),patientsBmiGroup.getInjuryLevelGroup());
+						shownInjuryLevelGroups.put(InjuryLevel.getIndexInInjuryLevel(patientsBmiGroup.getInjuryLevelGroup().getInjuryLevel()),patientsBmiGroup.getInjuryLevelGroup());
 						getChartChildren().addAll(patientsBmiGroup.getInjuryLevelGroup().getRegion(),patientsBmiGroup.getInjuryLevelGroup().getTextDotRegion(),patientsBmiGroup.getInjuryLevelGroup().getText());
 						addInjuryLevelGroupListener(patientsBmiGroup.getInjuryLevelGroup());
 					}
 					if(!patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().values().contains(patientsBmiGroup))
 					{
-						patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().put(getIndexOfBMIRange(patientsBmiGroup.getBmiRange().getBmiRangeName()),patientsBmiGroup);
+						patientsBmiGroup.getInjuryLevelGroup().getShownBMIGroups().put(BMIRangeName.getIndexInBMIRangeName(patientsBmiGroup.getBmiRange().getBmiRangeName()),patientsBmiGroup);
 						getChartChildren().addAll(patientsBmiGroup.getRegion(),patientsBmiGroup.getMenRegion(),patientsBmiGroup.getWomenRegion(),patientsBmiGroup.getTextDotRegion(),patientsBmiGroup.getText());
 						addBMIGroupListener(patientsBmiGroup);
 					}
@@ -808,33 +816,7 @@ public class RingChart extends Chart
 		getChartChildren().clear();
 	}
 	
-	private Integer getIndexInInjuryLevel(InjuryLevel injuryLevel)
-	{
-		int index = 0;
-		for(InjuryLevel injuryLevelValue:InjuryLevel.values())
-		{
-			if(injuryLevelValue==injuryLevel) 
-			{
-				return index;
-			}
-			index++;
-		}
-		return null;
-	}
 	
-	private Integer getIndexOfBMIRange(BMIRangeName bmiRangeName)
-	{
-		int index = 0;
-		for(BMIRangeName bmiRangeNameValue: BMIRangeName.values())
-		{
-			if(bmiRangeName==bmiRangeNameValue)
-			{
-				return index;
-			}
-			index++;
-		}
-		return null;
-	}
 	
 	 private void animateStartAngleChange(double newValue) 
      {
