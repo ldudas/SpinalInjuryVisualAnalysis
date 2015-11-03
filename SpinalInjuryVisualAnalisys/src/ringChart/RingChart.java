@@ -5,8 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import com.sun.javafx.charts.Legend;
 import com.sun.javafx.charts.Legend.LegendItem;
+
 import auxiliary.BMIRange;
 import auxiliary.BMIRangeFactory;
 import auxiliary.BMIRangeName;
@@ -57,8 +59,6 @@ public class RingChart extends Chart
 	private static double patientsGap = patientRegionRadius*1.5;
 	
 	
-	
-	
 	private Map<InjuryLevel,InjuryLevelGroup> injuryLevelGroups;
 	private Map<Integer,InjuryLevelGroup> shownInjuryLevelGroups;
 	private List<PatientsOnChartConnection> patientsOnChartConnections;
@@ -71,11 +71,106 @@ public class RingChart extends Chart
 	private double centerY;
 	private double radiusOuterInjuryLevel;
 	
-	private PatientOnChart chosenPatient;
+	//private PatientOnChart chosenPatient;
 	private List<PatientsOnChartConnection> hiddenChosenPatientConnections;
 	private List<PatientOnChart> patientsFromChosenPatientConnections;
 	
 	/* ------------------- PATIENTS LIST CHANGE LISTENER --------------------------------- */
+	private final ObjectProperty<PatientOnChart> chosenPatient = new ObjectPropertyBase<PatientOnChart>() {
+		
+		private PatientOnChart previousChosenPatient;
+		
+		@Override
+		public Object getBean()
+		{
+			return RingChart.this;
+		}
+
+		@Override
+		public String getName()
+		{
+			return "chosenPatient";
+		}
+		
+		@Override
+		protected void invalidated()
+		{
+			PatientOnChart patientOnChart = get();
+			if(patientOnChart != null)
+	    	{
+		    	Region patientsRegion = patientOnChart.getRegion();
+		    	
+			    if(previousChosenPatient==null)
+			   	 {
+			   		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+			   		 
+			   	 }
+			   	 else
+			   	 {  	
+			   		 previousChosenPatient.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+			   		 
+			   		for(PatientsOnChartConnection hiddenConnection: hiddenChosenPatientConnections)
+			    	{
+			    		hiddenConnection.getQuadCurve().setOpacity(1.0);
+				 	}
+			    	
+			    	for(PatientOnChart patientFromPair: patientsFromChosenPatientConnections)
+			    	{
+			    		patientFromPair.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));;
+			    	}
+			    	
+				 	hiddenChosenPatientConnections.clear();
+				 	patientsFromChosenPatientConnections.clear();
+			   		 
+			   		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
+			   	 }
+			   	 
+			    previousChosenPatient = patientOnChart;
+			    
+			   	 for(PatientsOnChartConnection connection: shownPatientsOnChartConnections)
+				 {
+			   		 PatientOnChart patientTo=null;
+						 if(connection.getPatientFrom()!=patientOnChart && connection.getPatientTo()!=patientOnChart)
+						 {
+							 connection.getQuadCurve().setOpacity(0.0);
+							 hiddenChosenPatientConnections.add(connection);
+						 }
+						 else
+						 {
+							 patientTo = connection.getPatientFrom()==patientOnChart ? connection.getPatientTo() : connection.getPatientFrom();
+							 patientTo.getRegion().setBackground(new Background(new BackgroundFill(Color.CHARTREUSE, CornerRadii.EMPTY, Insets.EMPTY)));
+							 patientsFromChosenPatientConnections.add(patientTo);
+						 }
+			  
+				 }
+	    	}
+			else
+			{
+				
+				if(previousChosenPatient!=null)
+			   	 {	
+				   	 previousChosenPatient.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+				   		
+					
+					for(PatientsOnChartConnection hiddenConnection: hiddenChosenPatientConnections)
+			    	{
+			    		hiddenConnection.getQuadCurve().setOpacity(1.0);
+				 	}
+			    	
+			    	for(PatientOnChart patientFromPair: patientsFromChosenPatientConnections)
+			    	{
+			    		patientFromPair.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));;
+			    	}
+			    	
+				 	hiddenChosenPatientConnections.clear();
+				 	patientsFromChosenPatientConnections.clear();
+			   	 }
+			}
+		}
+	};
+	public final PatientOnChart getChosenPatient() { return chosenPatient.getValue(); }
+ 	public final void setChosenPatient(PatientOnChart value) { chosenPatient.setValue(value); }
+ 	public final ObjectProperty<PatientOnChart> chosenPatientProperty() { return chosenPatient; }
 	
 	private final ListChangeListener<Patient> patientsChangeListener = c -> {System.out.println("RingChart: patientsChangeListeer.onChange()");};
 	
@@ -138,7 +233,15 @@ public class RingChart extends Chart
   	public void invalidated() 
   	{
   		System.out.println("RingChart: startAngle invalidated()");
-  		animateStartAngleChange(get());
+  		if(shouldAnimate())
+  		{
+  			animateStartAngleChange(get());
+  		}
+  		else
+  		{
+  			currentStartAngle.set(get());
+  			requestChartLayout();
+  		}
     }
 
   	@Override
@@ -554,12 +657,14 @@ public class RingChart extends Chart
        
     public void showHiddenConnections()
     {
-    	if(chosenPatient!=null)
-    	{
-	    	chosenPatient.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-	    	chosenPatient=null;
+    	//PatientOnChart chosenPatientValue = getChosenPatient();
+    	//System.out.println(chosenPatientValue);
+    	//if(chosenPatientValue!=null)
+    	//{
+    		//chosenPatientValue.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+	    	setChosenPatient(null);
 	    	
-	    	for(PatientsOnChartConnection hiddenConnection: hiddenChosenPatientConnections)
+	    	/*for(PatientsOnChartConnection hiddenConnection: hiddenChosenPatientConnections)
 	    	{
 	    		hiddenConnection.getQuadCurve().setOpacity(1.0);
 		 	}
@@ -570,11 +675,9 @@ public class RingChart extends Chart
 	    	}
 	    	
 		 	hiddenChosenPatientConnections.clear();
-		 	patientsFromChosenPatientConnections.clear();
-    	}
+		 	patientsFromChosenPatientConnections.clear();*/
+    	//}
     }
-       
-    
 	
 	
 	
@@ -741,6 +844,7 @@ public class RingChart extends Chart
 		         }
 				});
 	}
+	
 	private void addPatientsRegionListener(PatientOnChart patientOnChart)
 	{
 		Region patientsRegion = patientOnChart.getRegion();
@@ -750,41 +854,7 @@ public class RingChart extends Chart
 		{
          @Override public void handle(MouseEvent e) 
          {
-        	if(chosenPatient==null)
-        	 {
-        		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
-        		 
-        		 chosenPatient=patientOnChart;
-        	 }
-        	 else
-        	 {
-        		 
-        		 showHiddenConnections();
-        		 patientsRegion.setBackground(new Background(new BackgroundFill(Color.YELLOW, CornerRadii.EMPTY, Insets.EMPTY)));
-        		 
-        		 chosenPatient=patientOnChart;
-        	 }
-        	 
-        	 for(PatientsOnChartConnection connection: shownPatientsOnChartConnections)
-    		 {
-        		 PatientOnChart patientTo=null;
-    			 if(connection.getPatientFrom()!=patientOnChart && connection.getPatientTo()!=patientOnChart)
-    			 {
-    				 connection.getQuadCurve().setOpacity(0.0);
-    				 hiddenChosenPatientConnections.add(connection);
-    			 }
-    			 else
-    			 {
-    				 patientTo = connection.getPatientFrom()==patientOnChart ? connection.getPatientTo() : connection.getPatientFrom();
-    				 patientTo.getRegion().setBackground(new Background(new BackgroundFill(Color.CHARTREUSE, CornerRadii.EMPTY, Insets.EMPTY)));
-    				 patientsFromChosenPatientConnections.add(patientTo);
-    			 }
-        	 
-        	 
-    		 }
-        	 
-        	// patientOnChart.setShown(false);
-
+        	setChosenPatient(patientOnChart);
          }
      });
 		

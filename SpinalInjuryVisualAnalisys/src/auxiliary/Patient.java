@@ -103,6 +103,12 @@ public class Patient
 	{
 		this.patientOnChart = patientOnChart;
 	}
+
+	@Override
+	public String toString()
+	{
+		return firstName + " " + lastName;
+	}
 	
 	
 }

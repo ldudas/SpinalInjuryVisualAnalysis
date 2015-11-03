@@ -116,6 +116,13 @@ public class PatientOnChart extends ChartElement
 	{
 		shown = value;
 	}
+
+	@Override
+	public String toString()
+	{
+		return patient.toString();
+	}
     
+	
 	
 }

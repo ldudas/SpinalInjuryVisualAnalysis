@@ -287,4 +287,12 @@ public class BMIGroup extends ChartGroup
 		shown = value;
 	}
 
+
+	@Override
+	public String toString()
+	{
+		return bmiRange.getBmiRangeName().toString();
+	}
+	
+
 }

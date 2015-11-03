@@ -113,5 +113,14 @@ public class InjuryLevelGroup extends ChartGroup
 	{
 		shown = value;
 	}
+
+
+	@Override
+	public String toString()
+	{
+		return injuryLevel.toString();
+	}
+	
+	
  
 }

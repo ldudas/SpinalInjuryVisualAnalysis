@@ -25,7 +25,7 @@
                         <GridPane prefHeight="92.0" prefWidth="276.0">
                            <children>
                               <Label text="Animations" />
-                              <CheckBox mnemonicParsing="false" onAction="#showSyso" GridPane.columnIndex="1" />
+                              <CheckBox fx:id="animationsCheckBox" mnemonicParsing="false" onAction="#changeAnimated" selected="true" GridPane.columnIndex="1" />
                               <Label text="Start angle" GridPane.rowIndex="1" />
                               <Slider fx:id="startAngleSlider" blockIncrement="5.0" max="180.0" min="-180.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <Label text="Reset patient selection" GridPane.rowIndex="2" />
@@ -59,14 +59,14 @@
                           </rowConstraints>
                            <children>
                               <Label text="select group:" />
-                              <ComboBox prefWidth="150.0" GridPane.columnIndex="1" />
+                              <ComboBox fx:id="injuryLevelGroupSelect" onAction="#injuryLevelGroupSelected" prefWidth="150.0" GridPane.columnIndex="1" />
                            </children>
                         </GridPane>
                      </children>
                   </VBox>
                </content>
             </TitledPane>
-            <TitledPane prefHeight="200.0" prefWidth="200.0" text="BMI Group">
+            <TitledPane fx:id="bmiGroupPane" disable="true" prefHeight="200.0" prefWidth="200.0" text="BMI Group">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -80,14 +80,14 @@
                           </rowConstraints>
                            <children>
                               <Label text="select group:" />
-                              <ComboBox prefWidth="150.0" GridPane.columnIndex="1" />
+                              <ComboBox fx:id="bmiGroupSelect" onAction="#bmiGroupSelected" prefWidth="150.0" GridPane.columnIndex="1" />
                            </children>
                         </GridPane>
                      </children>
                   </VBox>
                </content>
             </TitledPane>
-            <TitledPane prefHeight="200.0" prefWidth="200.0" text="Patient">
+            <TitledPane fx:id="patientPane" disable="true" prefHeight="200.0" prefWidth="200.0" text="Patient">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
@@ -101,7 +101,7 @@
                           </rowConstraints>
                            <children>
                               <Label text="select patient:" />
-                              <ComboBox prefWidth="150.0" GridPane.columnIndex="1" />
+                              <ComboBox fx:id="patientSelect" onAction="#patientSelected" prefWidth="150.0" GridPane.columnIndex="1" />
                            </children>
                         </GridPane>
                      </children>
