@@ -18,24 +18,27 @@
       </GridPane>
       <Accordion SplitPane.resizableWithParent="false">
          <panes>
-            <TitledPane prefHeight="200.0" prefWidth="200.0" text="Chart">
+            <TitledPane prefHeight="200.0" prefWidth="200.0" text="General">
                <content>
                   <VBox prefHeight="200.0" prefWidth="100.0">
                      <children>
-                        <GridPane prefHeight="92.0" prefWidth="276.0">
+                        <GridPane prefHeight="108.0" prefWidth="276.0">
                            <children>
-                              <Label text="Animations" />
-                              <CheckBox fx:id="animationsCheckBox" mnemonicParsing="false" onAction="#changeAnimated" selected="true" GridPane.columnIndex="1" />
-                              <Label text="Start angle" GridPane.rowIndex="1" />
-                              <Slider fx:id="startAngleSlider" blockIncrement="5.0" max="180.0" min="-180.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <Label text="Reset patient selection" GridPane.rowIndex="2" />
-                              <Button mnemonicParsing="false" onAction="#resetPatientSelection" text="Reset" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="Animations" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="animationsCheckBox" mnemonicParsing="false" onAction="#changeAnimated" selected="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label text="Start angle" GridPane.rowIndex="2" />
+                              <Slider fx:id="startAngleSlider" blockIncrement="5.0" max="180.0" min="-180.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="Reset selections" GridPane.rowIndex="3" />
+                              <Button mnemonicParsing="false" onAction="#resetPatientSelection" text="Reset" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label text="Full screen mode" />
+                              <CheckBox fx:id="fullScreenModeCheckBox" mnemonicParsing="false" onAction="#fullScreenModeSelectionChanged" GridPane.columnIndex="1" />
                            </children>
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            </columnConstraints>
                            <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />

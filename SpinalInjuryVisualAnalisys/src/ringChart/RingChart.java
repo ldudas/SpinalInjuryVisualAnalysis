@@ -171,6 +171,106 @@ public class RingChart extends Chart
 	public final PatientOnChart getChosenPatient() { return chosenPatient.getValue(); }
  	public final void setChosenPatient(PatientOnChart value) { chosenPatient.setValue(value); }
  	public final ObjectProperty<PatientOnChart> chosenPatientProperty() { return chosenPatient; }
+ 	
+ 	private final ObjectProperty<BMIGroup> chosenBMIGroup= new ObjectPropertyBase<BMIGroup>() {
+		
+		private BMIGroup previousChosenBMIGroup;
+
+		@Override
+		public Object getBean()
+		{
+			return RingChart.this;
+		}
+
+		@Override
+		public String getName()
+		{
+			return "chosenBMIGroup";
+		}
+		
+		@Override
+		protected void invalidated()
+		{
+			BMIGroup chosenBMIGroup = get();
+			if(chosenBMIGroup != null)
+	    	{
+		    	Region bmiGroupRegion = chosenBMIGroup.getRegion();
+		    	
+			    if(previousChosenBMIGroup==null)
+			   	 {
+			   		 bmiGroupRegion.setStyle("-fx-border-color: yellow; -fx-border-width: 2.0;");
+			   	 }
+			   	 else
+			   	 {  	
+			   		 previousChosenBMIGroup.getRegion().setStyle("-fx-border-color: grey; -fx-border-width: 0.5;");
+			   		  bmiGroupRegion.setStyle("-fx-border-color: yellow; -fx-border-width: 2.0;");
+			   	}
+			   	 
+			    previousChosenBMIGroup = chosenBMIGroup;
+	    	}
+			else
+			{
+				if(previousChosenBMIGroup!=null)
+			   	 {	
+					 previousChosenBMIGroup.getRegion().setStyle("-fx-border-color: grey; -fx-border-width: 0.5;");
+			   	 }
+			}
+			
+		}
+ 	};
+ 	public final BMIGroup getChosenBMIGroup() { return chosenBMIGroup.getValue(); }
+ 	public final void setChosenBMIGroup(BMIGroup value) { chosenBMIGroup.setValue(value); }
+ 	public final ObjectProperty<BMIGroup> chosenBMIGroupProperty() { return chosenBMIGroup; }	
+ 	
+ 	private final ObjectProperty<InjuryLevelGroup> chosenInjuryLevelGroup= new ObjectPropertyBase<InjuryLevelGroup>() {
+		
+		private InjuryLevelGroup previousChosenInjuryLevelGroup;
+
+		@Override
+		public Object getBean()
+		{
+			return RingChart.this;
+		}
+
+		@Override
+		public String getName()
+		{
+			return "chosenInjuryLevelGroup";
+		}
+		
+		@Override
+		protected void invalidated()
+		{
+			InjuryLevelGroup chosenInjuryLevelGroup = get();
+			if(chosenInjuryLevelGroup != null)
+	    	{
+		    	Region InjuryLevelGroupRegion = chosenInjuryLevelGroup.getRegion();
+		    	
+			    if(previousChosenInjuryLevelGroup==null)
+			   	 {
+			   		 InjuryLevelGroupRegion.setStyle("-fx-border-color: yellow; -fx-border-width: 2.5;");
+			   	 }
+			   	 else
+			   	 {  	
+			   		 previousChosenInjuryLevelGroup.getRegion().setStyle("-fx-border-color: black; -fx-border-width: 1.0;");
+			   		  InjuryLevelGroupRegion.setStyle("-fx-border-color: yellow; -fx-border-width: 2.5;");
+			   	}
+			   	 
+			    previousChosenInjuryLevelGroup = chosenInjuryLevelGroup;
+	    	}
+			else
+			{
+				if(previousChosenInjuryLevelGroup!=null)
+			   	 {	
+					 previousChosenInjuryLevelGroup.getRegion().setStyle("-fx-border-color: black; -fx-border-width: 1.0;");
+			   	 }
+			}
+			
+		}
+ 	};
+ 	public final InjuryLevelGroup getChosenInjuryLevelGroup() { return chosenInjuryLevelGroup.getValue(); }
+ 	public final void setChosenInjuryLevelGroup(InjuryLevelGroup value) { chosenInjuryLevelGroup.setValue(value); }
+ 	public final ObjectProperty<InjuryLevelGroup> chosenInjuryLevelGroupProperty() { return chosenInjuryLevelGroup; }	
 	
 	private final ListChangeListener<Patient> patientsChangeListener = c -> {System.out.println("RingChart: patientsChangeListeer.onChange()");};
 	
@@ -655,7 +755,7 @@ public class RingChart extends Chart
     
 	}
        
-    public void showHiddenConnections()
+   /* public void showHiddenConnections()
     {
     	//PatientOnChart chosenPatientValue = getChosenPatient();
     	//System.out.println(chosenPatientValue);
@@ -675,10 +775,10 @@ public class RingChart extends Chart
 	    	}
 	    	
 		 	hiddenChosenPatientConnections.clear();
-		 	patientsFromChosenPatientConnections.clear();*/
+		 	patientsFromChosenPatientConnections.clear();
     	//}
     }
-	
+	*/
 	
 	
 	/*------------------- private methods ---------------------------------------------------------*/
@@ -826,7 +926,7 @@ public class RingChart extends Chart
 				{
 		         @Override public void handle(MouseEvent e) 
 		         {
-		        	 //injuryLevelGroup.setShown(false);
+		        	 setChosenInjuryLevelGroup(injuryLevelGroup);
 		         }
 				});
 		
@@ -840,7 +940,7 @@ public class RingChart extends Chart
 				{
 		         @Override public void handle(MouseEvent e) 
 		         {
-		        	// patientsBmiGroup.setShown(false);
+		        	setChosenBMIGroup(patientsBmiGroup);
 		         }
 				});
 	}

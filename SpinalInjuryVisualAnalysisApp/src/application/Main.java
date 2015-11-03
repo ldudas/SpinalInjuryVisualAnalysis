@@ -1,5 +1,6 @@
 package application;
 	
+import controller.RingChartController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -37,7 +38,9 @@ public class Main extends Application {
 			Scene scene = new Scene(root);
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
-			//primaryStage.setFullScreen(true);
+			
+			RingChartController.stage=primaryStage;
+			
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

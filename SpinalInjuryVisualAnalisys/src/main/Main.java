@@ -54,7 +54,7 @@ public class Main extends Application
                 new EventHandler<MouseEvent>() {
          @Override public void handle(MouseEvent e) {
             //Region reg =(Region) e.getSource();
-           ringChart.showHiddenConnections();
+           ringChart.setChosenPatient(null);
 
           }
      });

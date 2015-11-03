@@ -22,6 +22,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import ringChart.BMIGroup;
 import ringChart.InjuryLevelGroup;
 import ringChart.PatientOnChart;
@@ -30,6 +31,8 @@ import ringChart.RingChart;
 public class RingChartController implements Initializable
 {
 
+	public static Stage stage;
+	
 	@FXML
 	private TitledPane bmiGroupPane;
 	@FXML
@@ -47,6 +50,8 @@ public class RingChartController implements Initializable
 	private ComboBox<PatientOnChart> patientSelect;
 	@FXML
 	private CheckBox animationsCheckBox;
+	@FXML
+	private CheckBox fullScreenModeCheckBox;
 	
 	
 	private RingChart ringChart;
@@ -84,8 +89,52 @@ public class RingChartController implements Initializable
 			{
 				System.out.println("addition Listener: "+ringChart.getChosenPatient());
 				//TODO zaznacz z prawej ze pacjent zaznaczony
+				PatientOnChart patientOnChart = ringChart.getChosenPatient();
+				
+				if(patientOnChart!= null && patientOnChart!=patientSelect.getValue())
+				{
+					injuryLevelGroupSelect.setValue(patientOnChart.getBmiGroup().getInjuryLevelGroup());
+					bmiGroupSelect.setValue(patientOnChart.getBmiGroup());
+					patientSelect.setValue(patientOnChart);
+				}
 			}
 		});
+	     
+	     ringChart.chosenBMIGroupProperty().addListener(new InvalidationListener() {
+				
+				@Override
+				public void invalidated(Observable arg0)
+				{
+					//System.out.println("addition Listener: "+ringChart.getChosenPatient());
+					//TODO zaznacz z prawej ze pacjent zaznaczony
+					BMIGroup chosenBMIGroup = ringChart.getChosenBMIGroup();
+					
+					if(chosenBMIGroup!= null && chosenBMIGroup!=bmiGroupSelect.getValue())
+					{
+						injuryLevelGroupSelect.setValue(chosenBMIGroup.getInjuryLevelGroup());
+						bmiGroupSelect.setValue(chosenBMIGroup);
+						patientSelect.setValue(null);
+					}
+				}
+			});
+	     
+	     ringChart.chosenInjuryLevelGroupProperty().addListener(new InvalidationListener() {
+				
+				@Override
+				public void invalidated(Observable arg0)
+				{
+					//System.out.println("addition Listener: "+ringChart.getChosenPatient());
+					//TODO zaznacz z prawej ze pacjent zaznaczony
+					InjuryLevelGroup chosenInjuryLevelGroup = ringChart.getChosenInjuryLevelGroup();
+					
+					if(chosenInjuryLevelGroup!= null && chosenInjuryLevelGroup!=injuryLevelGroupSelect.getValue())
+					{
+						injuryLevelGroupSelect.setValue(chosenInjuryLevelGroup);
+						bmiGroupSelect.setValue(null);
+						patientSelect.setValue(null);
+					}
+				}
+			});
 	}
 	
 	public void changeStartAngle()
@@ -95,7 +144,9 @@ public class RingChartController implements Initializable
 	
 	public void resetPatientSelection()
 	{
-		ringChart.showHiddenConnections();
+		injuryLevelGroupSelect.setValue(null);
+		bmiGroupPane.setDisable(true);
+		patientPane.setDisable(true);
 	}
 	
 	public void injuryLevelGroupSelected()
@@ -103,23 +154,25 @@ public class RingChartController implements Initializable
 		
 		 InjuryLevelGroup currentSelectedInjuryLevelGroup = injuryLevelGroupSelect.getValue();
 		  
-		 if(selectedInjuryLevelGroup==null || selectedInjuryLevelGroup!=currentSelectedInjuryLevelGroup)
+		 if(selectedInjuryLevelGroup!=currentSelectedInjuryLevelGroup)
 		 {
 		 
-	     Collection<BMIGroup> bmiGroups = currentSelectedInjuryLevelGroup.getBmiGroups().values();
-	     
-	     bmiGroupSelect.setItems(FXCollections.observableArrayList(bmiGroups));
+			if(currentSelectedInjuryLevelGroup!=null)
+			 {
+		     Collection<BMIGroup> bmiGroups = currentSelectedInjuryLevelGroup.getBmiGroups().values();
+		     
+		     bmiGroupSelect.setItems(FXCollections.observableArrayList(bmiGroups));
+		     
+		     bmiGroupPane.setDisable(false);
+			 }
+			
+		     bmiGroupSelect.setValue(null);
 			 
-		 
-	     if(selectedPatientOnChart!=null)
-	     {
-	    	 ringChart.showHiddenConnections();
-	    	 selectedPatientOnChart=null;
-	     }
-	     
-	     bmiGroupPane.setDisable(false);
-		 
-		 selectedInjuryLevelGroup = currentSelectedInjuryLevelGroup;
+		     ringChart.setChosenInjuryLevelGroup(currentSelectedInjuryLevelGroup);
+		     
+		     
+			 
+			 selectedInjuryLevelGroup = currentSelectedInjuryLevelGroup;
 		 }
 	}
 	
@@ -129,22 +182,27 @@ public class RingChartController implements Initializable
 		
 		
 		
-		if(currentSelectedBMIGroup != null && (selectedBMIGroup== null || currentSelectedBMIGroup!= selectedBMIGroup))
+		if(currentSelectedBMIGroup!= selectedBMIGroup)
 		{
 
-		List<PatientOnChart> patientsOnChart = new ArrayList<PatientOnChart>();
-		patientsOnChart.addAll(currentSelectedBMIGroup.getPatientsOnChartWomen());
-		patientsOnChart.addAll(currentSelectedBMIGroup.getShownPatientsOnChartMen());
-		
-		patientSelect.setItems(FXCollections.observableArrayList(patientsOnChart));
-		
-		if(selectedPatientOnChart!=null)
-	    {	
-			ringChart.showHiddenConnections();
-			selectedPatientOnChart=null;
-	    }
-		
-		patientPane.setDisable(false);
+			if(currentSelectedBMIGroup!=null)
+			{
+			List<PatientOnChart> patientsOnChart = new ArrayList<PatientOnChart>();
+			patientsOnChart.addAll(currentSelectedBMIGroup.getPatientsOnChartWomen());
+			patientsOnChart.addAll(currentSelectedBMIGroup.getShownPatientsOnChartMen());
+			
+			patientSelect.setItems(FXCollections.observableArrayList(patientsOnChart));
+			
+			patientPane.setDisable(false);
+			}
+			
+			if(selectedPatientOnChart!=null)
+		    {	
+				ringChart.setChosenPatient(null);
+				selectedPatientOnChart=null;
+		    }
+			
+		ringChart.setChosenBMIGroup(currentSelectedBMIGroup);
 		
 		selectedBMIGroup = currentSelectedBMIGroup;
 		}
@@ -166,6 +224,11 @@ public class RingChartController implements Initializable
 	public void changeAnimated()
 	{
 		ringChart.setAnimated(animationsCheckBox.isSelected());
+	}
+	
+	public void fullScreenModeSelectionChanged()
+	{
+		stage.setFullScreen(fullScreenModeCheckBox.isSelected());
 	}
 	
 
