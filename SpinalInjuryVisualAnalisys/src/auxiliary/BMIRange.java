@@ -43,6 +43,17 @@ public class BMIRange
 	@Override
 	public String toString()
 	{
-		return "BMIRange: ( " + fromBMI + ", " + toBMI + ">";
+		if(fromBMI==Double.MIN_VALUE)
+		{
+			return "<"+toBMI;
+		}
+		else if (toBMI==Double.MAX_VALUE)
+		{
+			return ">"+fromBMI;
+		}
+		else
+		{
+			return "( " + fromBMI + ", " + toBMI + " >";
+		}
 	}
 }

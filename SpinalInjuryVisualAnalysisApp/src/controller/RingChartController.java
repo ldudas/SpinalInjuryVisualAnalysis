@@ -1,5 +1,6 @@
 package controller;
 
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Side;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
@@ -31,7 +33,7 @@ import ringChart.RingChart;
 public class RingChartController implements Initializable
 {
 
-	public static Stage stage;
+	private Stage stage;
 	
 	@FXML
 	private TitledPane bmiGroupPane;
@@ -41,17 +43,53 @@ public class RingChartController implements Initializable
 	@FXML
 	private GridPane ringChartGridPane;
 	@FXML
+	private GridPane detailsGridPane;
+	@FXML
+	private GridPane bmiGroupGridPane;
+	@FXML
+	private GridPane injuryLevelGridPane;
+	
+	@FXML
 	private Slider startAngleSlider;
+	
 	@FXML
 	private ComboBox<InjuryLevelGroup> injuryLevelGroupSelect;
 	@FXML
 	private ComboBox<BMIGroup> bmiGroupSelect;
 	@FXML
 	private ComboBox<PatientOnChart> patientSelect;
+	
 	@FXML
 	private CheckBox animationsCheckBox;
 	@FXML
 	private CheckBox fullScreenModeCheckBox;
+	
+	@FXML
+	private Label firstNameLabel;
+	@FXML
+	private Label lastNameLabel;
+	@FXML
+	private Label sexLabel;
+	@FXML
+	private Label weightLabel;
+	@FXML
+	private Label heightLabel;
+	@FXML
+	private Label strengthLabel;
+	@FXML
+	private Label wnmLabel;
+	@FXML
+	private Label patientDetailsLabel;
+	@FXML
+	private Label numberOfBMIPatientsLabel;
+	@FXML
+	private Label bmiRangeLabel;
+	@FXML
+	private Label bmiGroupDetailsLabel;
+	@FXML
+	private Label injuryLevelNumberOfPatientsLabel;
+	@FXML
+	private Label injuryLevelDetailsLabel;
 	
 	
 	private RingChart ringChart;
@@ -163,11 +201,28 @@ public class RingChartController implements Initializable
 		     
 		     bmiGroupSelect.setItems(FXCollections.observableArrayList(bmiGroups));
 		     
+		     int sumOfPatients = 0;
+		     for(BMIGroup bmiGroup: bmiGroups)
+		     {
+		    	 sumOfPatients+= bmiGroup.getPatientsOnChartMen().size();
+		    	 sumOfPatients+= bmiGroup.getPatientsOnChartWomen().size();
+		     }
+		     
+		     injuryLevelNumberOfPatientsLabel.setText(Integer.toString(sumOfPatients));
+		     
+		     injuryLevelDetailsLabel.setVisible(true);
+			 injuryLevelGridPane.setVisible(true);
 		     bmiGroupPane.setDisable(false);
 			 }
+			else
+			{
+				injuryLevelDetailsLabel.setVisible(false);
+				injuryLevelGridPane.setVisible(false);
+			}
 			
 		     bmiGroupSelect.setValue(null);
 			 
+		    
 		     ringChart.setChosenInjuryLevelGroup(currentSelectedInjuryLevelGroup);
 		     
 		     
@@ -193,7 +248,21 @@ public class RingChartController implements Initializable
 			
 			patientSelect.setItems(FXCollections.observableArrayList(patientsOnChart));
 			
+			
+			numberOfBMIPatientsLabel.setText(Integer.toString(patientsOnChart.size()));
+			bmiRangeLabel.setText(currentSelectedBMIGroup.getBmiRange().toString());
+			
+			bmiGroupGridPane.setVisible(true);
+			bmiGroupDetailsLabel.setVisible(true);
+			
+				
 			patientPane.setDisable(false);
+			}
+			else
+			{
+				bmiGroupGridPane.setVisible(false);
+				bmiGroupDetailsLabel.setVisible(false);
+				patientPane.setDisable(true);
 			}
 			
 			if(selectedPatientOnChart!=null)
@@ -212,12 +281,33 @@ public class RingChartController implements Initializable
 	{
 		PatientOnChart currentSelectedPatient = patientSelect.getValue();
 		
+		
 		if(currentSelectedPatient!= null)
 		{
-			ringChart.setChosenPatient(currentSelectedPatient);
+	
+			Patient selectedPatient = currentSelectedPatient.getPatient();
 			
-			selectedPatientOnChart = currentSelectedPatient;
+			firstNameLabel.setText(selectedPatient.getFirstName());
+			lastNameLabel.setText(selectedPatient.getLastName());
+			sexLabel.setText(selectedPatient.getSex().toString());
+			weightLabel.setText(Double.toString(selectedPatient.getWeight()));
+			heightLabel.setText(Double.toString(selectedPatient.getHeight()));
+			strengthLabel.setText(Double.toString(selectedPatient.getStrength()));
+			wnmLabel.setText(Double.toString(selectedPatient.getWnm()));
+			
+			
+			detailsGridPane.setVisible(true);
+			patientDetailsLabel.setVisible(true);			
+			
 		}
+		else 
+		{
+			detailsGridPane.setVisible(false);
+			patientDetailsLabel.setVisible(false);
+		}
+		
+		ringChart.setChosenPatient(currentSelectedPatient);
+		selectedPatientOnChart = currentSelectedPatient;
 		
 	}
 	
@@ -229,6 +319,11 @@ public class RingChartController implements Initializable
 	public void fullScreenModeSelectionChanged()
 	{
 		stage.setFullScreen(fullScreenModeCheckBox.isSelected());
+	}
+
+	public void setStage(Stage primaryStage)
+	{
+		this.stage = primaryStage;
 	}
 	
 
