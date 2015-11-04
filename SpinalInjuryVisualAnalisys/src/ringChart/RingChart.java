@@ -272,7 +272,7 @@ public class RingChart extends Chart
  	public final void setChosenInjuryLevelGroup(InjuryLevelGroup value) { chosenInjuryLevelGroup.setValue(value); }
  	public final ObjectProperty<InjuryLevelGroup> chosenInjuryLevelGroupProperty() { return chosenInjuryLevelGroup; }	
 	
-	private final ListChangeListener<Patient> patientsChangeListener = c -> {System.out.println("RingChart: patientsChangeListeer.onChange()");};
+	private final ListChangeListener<Patient> patientsChangeListener = c -> {};
 	
 	/*-------------------- PROPERTIES --------------------------------------------------- */
 	
@@ -283,7 +283,7 @@ public class RingChart extends Chart
 		  @Override 
 		  protected void invalidated()
 		  {
-				System.out.println("RingChart: patients invalidated()"); 
+				//System.out.println("RingChart: patients invalidated()"); 
 				
 				final ObservableList<Patient> current = getValue();
 				if(current!=old) //if new set list is not the old list
@@ -332,7 +332,7 @@ public class RingChart extends Chart
   	@Override 
   	public void invalidated() 
   	{
-  		System.out.println("RingChart: startAngle invalidated()");
+  		//System.out.println("RingChart: startAngle invalidated()");
   		if(shouldAnimate())
   		{
   			animateStartAngleChange(get());
@@ -394,7 +394,7 @@ public class RingChart extends Chart
 	}
 	public RingChart(ObservableList<Patient> patients)
 	{
-		System.out.println("RingChart: constructor(patients). List size: "+patients.size());
+		//System.out.println("RingChart: constructor(patients). List size: "+patients.size());
 		injuryLevelGroups = new LinkedHashMap<InjuryLevel, InjuryLevelGroup>();
 		shownInjuryLevelGroups = new TreeMap<Integer,InjuryLevelGroup>();
 		patientsOnChartConnections = new LinkedList<PatientsOnChartConnection>();
@@ -414,7 +414,7 @@ public class RingChart extends Chart
 	/** @inheritDoc */
 	protected void layoutChartChildren(double top, double left, double width, double height)
 	{
-		System.out.println("RingChart: layoutChartChildren()");
+		//System.out.println("RingChart: layoutChartChildren()");
 		
 		centerX = width/2 + left; //X center of chart pane
         centerY = height/2 + top; //Y center of char pane
@@ -815,15 +815,6 @@ public class RingChart extends Chart
 			}
 		}
 		
-		/*for(InjuryLevelGroup injGr: injuryLevelGroups.values())
-		{
-			System.out.println("InjGroup: "+injGr.getInjuryLevel());
-			for(BMIGroup bmiGr: injGr.getBmiGroups().values())
-			{
-				System.out.println("  BMIGr: "+bmiGr.getBmiRange());
-			}
-		}*/
-		
 	}
 	
 	private void clearShownInjuryGroupsBMIGroupsWomanManGroups()
@@ -842,7 +833,6 @@ public class RingChart extends Chart
 	
 	private void clearGroupsFromPatients()
 	{
-		System.out.println("RingChart: clearGroupsFromPatients()");
 		for(InjuryLevelGroup injGr: injuryLevelGroups.values())
 		{
 			for(BMIGroup bmiGr: injGr.getBmiGroups().values())
@@ -857,7 +847,7 @@ public class RingChart extends Chart
 	
 	private void assignPatientsToGroups(ObservableList<Patient> currentList)
 	{
-		//int assignmentCounter = 0;
+		
 		
 		
 		BMIRangeFactory bmiRangeFactory = BMIRangeFactory.getInstance(); //get bmi ranges factory
@@ -876,7 +866,6 @@ public class RingChart extends Chart
 				{
 					BMIGroup patientsBmiGroup = patientsInjuryLevelGroup.getBmiGroups().get(bmiRangeName); // get bmi subgroup for injury level group of patient
 					
-					//assignmentCounter++;
 					
 					PatientOnChart patientOnChart = null;
 					if(patient.getSex()==Sex.MAN) //if patient is a man
@@ -926,9 +915,7 @@ public class RingChart extends Chart
 			
 			
 		}
-			
-		
-		//System.out.println("Patients assigned: "+assignmentCounter);
+
 	}
 	
 	

@@ -1,4 +1,4 @@
-package controller;
+package ringChartVisualisation.controller;
 
 
 import java.net.URL;
@@ -17,19 +17,25 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.geometry.Side;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import ringChart.BMIGroup;
 import ringChart.InjuryLevelGroup;
 import ringChart.PatientOnChart;
 import ringChart.RingChart;
+import startWindow.controller.StartWindowController;
 
 public class RingChartController implements Initializable
 {
@@ -132,8 +138,6 @@ public class RingChartController implements Initializable
 			@Override
 			public void invalidated(Observable arg0)
 			{
-				System.out.println("addition Listener: "+ringChart.getChosenPatient());
-				//TODO zaznacz z prawej ze pacjent zaznaczony
 				PatientOnChart patientOnChart = ringChart.getChosenPatient();
 				
 				if(patientOnChart!= null && patientOnChart!=patientSelect.getValue())
@@ -150,8 +154,6 @@ public class RingChartController implements Initializable
 				@Override
 				public void invalidated(Observable arg0)
 				{
-					//System.out.println("addition Listener: "+ringChart.getChosenPatient());
-					//TODO zaznacz z prawej ze pacjent zaznaczony
 					BMIGroup chosenBMIGroup = ringChart.getChosenBMIGroup();
 					
 					if(chosenBMIGroup!= null && chosenBMIGroup!=bmiGroupSelect.getValue())
@@ -168,8 +170,6 @@ public class RingChartController implements Initializable
 				@Override
 				public void invalidated(Observable arg0)
 				{
-					//System.out.println("addition Listener: "+ringChart.getChosenPatient());
-					//TODO zaznacz z prawej ze pacjent zaznaczony
 					InjuryLevelGroup chosenInjuryLevelGroup = ringChart.getChosenInjuryLevelGroup();
 					
 					if(chosenInjuryLevelGroup!= null && chosenInjuryLevelGroup!=injuryLevelGroupSelect.getValue())
@@ -467,10 +467,61 @@ public class RingChartController implements Initializable
 		}
 
 	}
+	
+	public void goToStartWindow()
+	{
+		try {
+			stage.hide();
+			
+			if (stage.isFullScreen()) stage.setFullScreen(false);
+			
+			 FXMLLoader loader = new FXMLLoader();
+	         loader.setLocation(getClass().getResource("/startWindow/view/startWindowView.fxml"));
+	         AnchorPane root = (AnchorPane) loader.load();
+	         
+	         
+	         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+	        double minX = primaryScreenBounds.getMinX();
+	        double minY = primaryScreenBounds.getMinY();
+	        double width = primaryScreenBounds.getWidth();
+	        double height = primaryScreenBounds.getHeight();
+	        
+	        double stageWidth = root.getPrefWidth();
+	        double stageHeight = root.getPrefHeight();
+	        double leftCornerX = minX + width/2 - stageWidth/2;
+	        double leftCornerY = minY + height/2 - stageHeight/2;
+	         
+	         stage.setX(leftCornerX);
+	         stage.setY(leftCornerY);
+	         stage.setWidth(stageWidth);
+	         stage.setHeight(stageHeight);
+	            	
+	         Scene scene = new Scene(root);
+			 stage.setScene(scene);
+			 
+			 StartWindowController controller = loader.getController();
+				if(controller.getStage()==null)
+				{
+					controller.setStage(stage);
+				}
+			
+			stage.show();
+		} 
+		catch(Exception e) 
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public void setStage(Stage primaryStage)
 	{
 		this.stage = primaryStage;
+	}
+	
+	public Stage getStage()
+	{
+		return stage;
 	}
 	
 

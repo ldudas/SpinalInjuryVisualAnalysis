@@ -86,7 +86,6 @@ public abstract class Chart extends Region {
     {
         @Override protected void layoutChildren() 
         {
-        	System.out.println("Chart - chartContent: layoutChildren()");
             final double top = snappedTopInset();
             final double left = snappedLeftInset();
             final double bottom = snappedBottomInset();
