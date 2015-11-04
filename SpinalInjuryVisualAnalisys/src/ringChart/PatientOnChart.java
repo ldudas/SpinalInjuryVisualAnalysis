@@ -59,22 +59,25 @@ public class PatientOnChart extends ChartElement
 			if(value)
 	        {
 				
-	      	  if(!shownPatientsList.isEmpty() || !shownPatientsList2.isEmpty())
-	      	  {
+	      	 // if(!shownPatientsList.isEmpty() || !shownPatientsList2.isEmpty())
+	      	 // {
 	      		  shownPatientsList.add(PatientOnChart.this);
 	        	  ringChart.getChartChildren().add(PatientOnChart.this.region);
 	        	  
 	        	  for(PatientsOnChartConnection connection: ringChart.getPatientsOnChartConnections())
 	        	  {
-	        		  if(connection.getPatientFrom()==PatientOnChart.this || connection.getPatientTo()==PatientOnChart.this)
+	        		  if((connection.getPatientFrom()==PatientOnChart.this && connection.getPatientTo().isShown()) || (connection.getPatientTo()==PatientOnChart.this && connection.getPatientFrom().isShown()))
 	        		  {
 	        			  ringChart.getShownPatientsOnChartConnections().add(connection);
+	        			  if(!ringChart.getChartChildren().contains(connection.getQuadCurve()))
+	        			  {
 	        			  ringChart.getChartChildren().add(connection.getQuadCurve());
+	        			  }
 	        		  }
 	        	  }
 	        	  
 	        	  ringChart.requestChartLayout();
-	      	  }
+	      	 // }
 	      	  
 	        }
 	        else

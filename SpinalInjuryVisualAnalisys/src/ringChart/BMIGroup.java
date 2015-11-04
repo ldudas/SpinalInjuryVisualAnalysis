@@ -246,7 +246,7 @@ public class BMIGroup extends ChartGroup
 		{
 			 if(value)
 	         {
-	       	  
+	       	  	System.out.println("show bmigroup");
 				 ringChart.getChartChildren().addAll(menRegion,womenRegion,region,textDotRegion,text);
 			  	  
 				 
@@ -260,7 +260,7 @@ public class BMIGroup extends ChartGroup
 			  		patientWoman.setShown(true);
 			  	  }
 				 
-				 injuryLevelGroup.getShownBMIGroups().put(BMIRangeName.getIndexInBMIRangeName(this.getBmiRange().getBmiRangeName()),this);
+				 injuryLevelGroup.getShownBMIGroups().put(BMIRangeName.getIndexInBMIRangeName(this.getBmiRange().getBmiRangeName()),BMIGroup.this);
 	         }
 	         else
 	         {
@@ -279,6 +279,8 @@ public class BMIGroup extends ChartGroup
 	       	  }
 	       	  
 	         }
+			 
+			 shown = value;
 		}
 	}
 	

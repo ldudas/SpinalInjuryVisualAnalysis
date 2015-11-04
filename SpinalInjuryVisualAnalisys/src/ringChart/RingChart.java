@@ -116,7 +116,7 @@ public class RingChart extends Chart
 			    	
 			    	for(PatientOnChart patientFromPair: patientsFromChosenPatientConnections)
 			    	{
-			    		patientFromPair.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));;
+			    		patientFromPair.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
 			    	}
 			    	
 				 	hiddenChosenPatientConnections.clear();
@@ -755,30 +755,47 @@ public class RingChart extends Chart
     
 	}
        
-   /* public void showHiddenConnections()
-    {
-    	//PatientOnChart chosenPatientValue = getChosenPatient();
-    	//System.out.println(chosenPatientValue);
-    	//if(chosenPatientValue!=null)
-    	//{
-    		//chosenPatientValue.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
-	    	setChosenPatient(null);
-	    	
-	    	/*for(PatientsOnChartConnection hiddenConnection: hiddenChosenPatientConnections)
-	    	{
-	    		hiddenConnection.getQuadCurve().setOpacity(1.0);
-		 	}
-	    	
-	    	for(PatientOnChart patientFromPair: patientsFromChosenPatientConnections)
-	    	{
-	    		patientFromPair.getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));;
-	    	}
-	    	
-		 	hiddenChosenPatientConnections.clear();
-		 	patientsFromChosenPatientConnections.clear();
-    	//}
-    }
-	*/
+	public void unselectRelatedPatientsIfPatientSelected()
+	{
+		PatientOnChart chosenPatient = getChosenPatient();
+		
+		if(chosenPatient!=null)
+		{
+			for(PatientsOnChartConnection connection: patientsOnChartConnections)
+			{
+				if(connection.getPatientFrom()==chosenPatient && connection.getPatientTo().isShown())
+				{
+					connection.getPatientTo().getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+				}
+				else if (connection.getPatientTo()==chosenPatient && connection.getPatientFrom().isShown())
+				{
+					connection.getPatientFrom().getRegion().setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, Insets.EMPTY)));
+      		  	}
+			}
+		}
+		
+	}
+	
+	public void selectRelatedPatientsIfPatientSelected()
+	{
+		
+		PatientOnChart chosenPatient = getChosenPatient();
+		
+		if(chosenPatient!=null)
+		{
+			for(PatientsOnChartConnection connection: patientsOnChartConnections)
+			{
+				if(connection.getPatientFrom()==chosenPatient && connection.getPatientTo().isShown())
+				{
+					connection.getPatientTo().getRegion().setBackground(new Background(new BackgroundFill(Color.CHARTREUSE, CornerRadii.EMPTY, Insets.EMPTY)));
+				}
+				else if (connection.getPatientTo()==chosenPatient && connection.getPatientFrom().isShown())
+				{
+					connection.getPatientFrom().getRegion().setBackground(new Background(new BackgroundFill(Color.CHARTREUSE, CornerRadii.EMPTY, Insets.EMPTY)));
+      		  	}
+			}
+		}
+	}
 	
 	
 	/*------------------- private methods ---------------------------------------------------------*/
@@ -1154,6 +1171,9 @@ public class RingChart extends Chart
     {
     	return Math.sqrt(Math.pow(secondX-firstX, 2)+Math.pow(secondY-firstY,2));
     }
+	
+    
+	
 	
 
 }

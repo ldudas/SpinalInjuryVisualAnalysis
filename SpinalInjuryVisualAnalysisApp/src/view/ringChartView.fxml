@@ -84,10 +84,13 @@
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="Number of patients" />
                               <Label fx:id="injuryLevelNumberOfPatientsLabel" GridPane.columnIndex="1" />
+                              <Label text="Shown" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="injuryLevelGroupShownCheckBox" mnemonicParsing="false" onAction="#injuryLevelGroupShownChanged" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                            </children>
                         </GridPane>
                      </children>
@@ -129,12 +132,15 @@
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="BMI range" />
                               <Label text="Number of patients" GridPane.rowIndex="1" />
                               <Label fx:id="bmiRangeLabel" GridPane.columnIndex="1" />
                               <Label fx:id="numberOfBMIPatientsLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <CheckBox fx:id="bmiGroupShownCheckBox" mnemonicParsing="false" onAction="#bmiGroupShownChanged" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label text="Shown" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </children>
@@ -181,6 +187,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
                               <Label text="First name" />
@@ -197,6 +204,8 @@
                               <Label fx:id="heightLabel" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                               <Label fx:id="strengthLabel" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                               <Label fx:id="wnmLabel" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                              <Label text="Shown" GridPane.rowIndex="7" />
+                              <CheckBox fx:id="patientShownCheckBox" mnemonicParsing="false" onAction="#patientShownChanged" GridPane.columnIndex="1" GridPane.rowIndex="7" />
                            </children>
                         </GridPane>
                      </children>

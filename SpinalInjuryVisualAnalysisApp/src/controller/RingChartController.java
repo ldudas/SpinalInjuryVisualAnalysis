@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import auxiliary.Patient;
+import auxiliary.Sex;
 import data.PatientsCreator;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
@@ -63,6 +64,12 @@ public class RingChartController implements Initializable
 	private CheckBox animationsCheckBox;
 	@FXML
 	private CheckBox fullScreenModeCheckBox;
+	@FXML
+	private CheckBox injuryLevelGroupShownCheckBox;
+	@FXML
+	private CheckBox bmiGroupShownCheckBox;
+	@FXML
+	private CheckBox patientShownCheckBox;
 	
 	@FXML
 	private Label firstNameLabel;
@@ -209,10 +216,19 @@ public class RingChartController implements Initializable
 		     }
 		     
 		     injuryLevelNumberOfPatientsLabel.setText(Integer.toString(sumOfPatients));
-		     
+		     injuryLevelGroupShownCheckBox.setSelected(currentSelectedInjuryLevelGroup.isShown());
 		     injuryLevelDetailsLabel.setVisible(true);
 			 injuryLevelGridPane.setVisible(true);
-		     bmiGroupPane.setDisable(false);
+		     
+				if(injuryLevelGroupShownCheckBox.isSelected())
+				 {
+					 bmiGroupPane.setDisable(false);
+				 }
+				 else
+				 {
+					 bmiGroupPane.setDisable(true);
+				 }
+			 
 			 }
 			else
 			{
@@ -244,7 +260,7 @@ public class RingChartController implements Initializable
 			{
 			List<PatientOnChart> patientsOnChart = new ArrayList<PatientOnChart>();
 			patientsOnChart.addAll(currentSelectedBMIGroup.getPatientsOnChartWomen());
-			patientsOnChart.addAll(currentSelectedBMIGroup.getShownPatientsOnChartMen());
+			patientsOnChart.addAll(currentSelectedBMIGroup.getPatientsOnChartMen());
 			
 			patientSelect.setItems(FXCollections.observableArrayList(patientsOnChart));
 			
@@ -252,11 +268,19 @@ public class RingChartController implements Initializable
 			numberOfBMIPatientsLabel.setText(Integer.toString(patientsOnChart.size()));
 			bmiRangeLabel.setText(currentSelectedBMIGroup.getBmiRange().toString());
 			
+			bmiGroupShownCheckBox.setSelected(currentSelectedBMIGroup.isShown());
 			bmiGroupGridPane.setVisible(true);
 			bmiGroupDetailsLabel.setVisible(true);
 			
-				
-			patientPane.setDisable(false);
+			if(bmiGroupShownCheckBox.isSelected())
+			{
+				patientPane.setDisable(false);
+			}
+			else
+			{
+				patientPane.setDisable(true);
+			}
+			
 			}
 			else
 			{
@@ -296,6 +320,7 @@ public class RingChartController implements Initializable
 			wnmLabel.setText(Double.toString(selectedPatient.getWnm()));
 			
 			
+			patientShownCheckBox.setSelected(currentSelectedPatient.isShown());
 			detailsGridPane.setVisible(true);
 			patientDetailsLabel.setVisible(true);			
 			
@@ -319,6 +344,128 @@ public class RingChartController implements Initializable
 	public void fullScreenModeSelectionChanged()
 	{
 		stage.setFullScreen(fullScreenModeCheckBox.isSelected());
+	}
+	
+	public void injuryLevelGroupShownChanged()
+	{
+		if(selectedInjuryLevelGroup.isShown()!=injuryLevelGroupShownCheckBox.isSelected())
+		{
+			selectedInjuryLevelGroup.setShown(injuryLevelGroupShownCheckBox.isSelected());
+			if(injuryLevelGroupShownCheckBox.isSelected())
+			{
+				ringChart.selectRelatedPatientsIfPatientSelected();
+				if(ringChart.getChosenPatient()==selectedPatientOnChart)
+				{
+					patientShownCheckBox.setSelected(true);
+				}
+			}
+			else
+			{
+				ringChart.unselectRelatedPatientsIfPatientSelected();
+			}
+			
+			
+		}
+		
+		
+		if(injuryLevelGroupShownCheckBox.isSelected())
+		{
+			bmiGroupPane.setDisable(false);
+			if(selectedPatientOnChart!=null)
+			{
+			patientPane.setDisable(false);
+			}
+		}
+		else
+		{
+			bmiGroupPane.setDisable(true);
+			patientPane.setDisable(true);
+		}
+	}
+	
+	public void bmiGroupShownChanged()
+	{
+		System.out.println("bmiGroupShownChanged");
+		if(selectedBMIGroup.isShown()!=bmiGroupShownCheckBox.isSelected())
+		{
+			
+			if(bmiGroupShownCheckBox.isSelected())
+			{
+				selectedBMIGroup.setShown(bmiGroupShownCheckBox.isSelected());
+				ringChart.selectRelatedPatientsIfPatientSelected();
+				if(ringChart.getChosenPatient()==selectedPatientOnChart)
+				{
+					patientShownCheckBox.setSelected(true);
+				}
+			}
+			else
+			{
+				Collection<BMIGroup> shownBMIGroups = selectedBMIGroup.getInjuryLevelGroup().getShownBMIGroups().values();
+				
+				if(shownBMIGroups.size() == 1 )
+		       	{
+					injuryLevelGroupShownCheckBox.setSelected(false);
+					injuryLevelGroupShownChanged();
+					selectedBMIGroup.setShown(bmiGroupShownCheckBox.isSelected());
+		       	  	bmiGroupSelect.setValue(null);
+		       	  	if(ringChart.getChosenPatient()!=null)
+		       	  	{
+		       	  		ringChart.setChosenPatient(null);
+		       	  	}
+		       	}
+				else
+				{
+					selectedBMIGroup.setShown(bmiGroupShownCheckBox.isSelected());
+					ringChart.unselectRelatedPatientsIfPatientSelected();
+				}
+				
+				
+			}
+		}
+		
+		if(bmiGroupShownCheckBox.isSelected())
+		{
+			patientPane.setDisable(false);
+		}
+		else
+		{
+			patientPane.setDisable(true);
+		}
+	}
+	
+	public void patientShownChanged()
+	{
+		if(selectedPatientOnChart.isShown()!=patientShownCheckBox.isSelected())
+		{
+			
+			if(patientShownCheckBox.isSelected())
+			{
+				selectedPatientOnChart.setShown(patientShownCheckBox.isSelected());
+				ringChart.selectRelatedPatientsIfPatientSelected();
+			}
+			else
+			{
+				List<PatientOnChart> shownPatientsList = selectedPatientOnChart.getPatient().getSex() == Sex.MAN ? selectedPatientOnChart.getBmiGroup().getShownPatientsOnChartMen() : selectedPatientOnChart.getBmiGroup().getShownPatientsOnChartWomen();
+		      	List<PatientOnChart> shownPatientsList2 = selectedPatientOnChart.getPatient().getSex() == Sex.MAN ? selectedPatientOnChart.getBmiGroup().getShownPatientsOnChartWomen() : selectedPatientOnChart.getBmiGroup().getShownPatientsOnChartMen();
+		      	 
+		      	if(shownPatientsList.size()==1 && shownPatientsList2.isEmpty())
+		      	{
+		      		bmiGroupShownCheckBox.setSelected(false);
+		      		bmiGroupShownChanged();
+		      		selectedPatientOnChart.setShown(patientShownCheckBox.isSelected());
+		      		patientSelect.setValue(null);
+		      		ringChart.setChosenPatient(null);
+		      	}
+		      	else
+		      	{
+		      		ringChart.unselectRelatedPatientsIfPatientSelected();
+		      		selectedPatientOnChart.setShown(patientShownCheckBox.isSelected());
+		      	}
+		      	
+		      	
+			}
+		}
+
 	}
 
 	public void setStage(Stage primaryStage)

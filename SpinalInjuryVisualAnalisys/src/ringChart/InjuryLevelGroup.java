@@ -77,8 +77,8 @@ public class InjuryLevelGroup extends ChartGroup
 		{
 			if(value)
 			{
-				
-				ringChart.getShownInjuryLevelGroups().put(InjuryLevel.getIndexInInjuryLevel(injuryLevel),this);
+
+				ringChart.getShownInjuryLevelGroups().put(InjuryLevel.getIndexInInjuryLevel(injuryLevel),InjuryLevelGroup.this);
 				
 				ringChart.getChartChildren().addAll(region,textDotRegion,text);
 				
