@@ -1,10 +1,17 @@
 package auxiliary;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import ringChart.PatientOnChart;
 
-public class Patient 
+public class Patient implements Serializable
 {
 
+	private static final long serialVersionUID = 1L;
+	
 	private String firstName;
 	private String lastName;
 	private Sex sex;
@@ -108,6 +115,21 @@ public class Patient
 	public String toString()
 	{
 		return firstName + " " + lastName;
+	}
+	
+	public void serializeToFile(String path, String fileName)
+	{
+		try
+	      {
+	         FileOutputStream fileOut =new FileOutputStream(path+"/"+fileName);
+	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
+	         out.writeObject(this);
+	         out.close();
+	         fileOut.close();
+	      }catch(IOException i)
+	      {
+	          i.printStackTrace();
+	      }
 	}
 	
 	

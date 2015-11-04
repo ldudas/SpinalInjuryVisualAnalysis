@@ -35,6 +35,7 @@ import ringChart.BMIGroup;
 import ringChart.InjuryLevelGroup;
 import ringChart.PatientOnChart;
 import ringChart.RingChart;
+import ringChartVisualisation.model.RingChartModel;
 import startWindow.controller.StartWindowController;
 
 public class RingChartController implements Initializable
@@ -115,7 +116,7 @@ public class RingChartController implements Initializable
 	public void initialize(URL location, ResourceBundle resources)
 	{
 		
-		 ObservableList<Patient> ringChartData = PatientsCreator.getPatients();
+		 ObservableList<Patient> ringChartData = RingChartModel.getPatients();
 	     ringChart = new RingChart(ringChartData);
 	     ringChart.setTitle("Spinal Injury Patients");
 	     ringChart.setTitleSide(Side.TOP);
@@ -505,7 +506,7 @@ public class RingChartController implements Initializable
 				{
 					controller.setStage(stage);
 				}
-			
+				stage.setResizable(false);
 			stage.show();
 		} 
 		catch(Exception e) 

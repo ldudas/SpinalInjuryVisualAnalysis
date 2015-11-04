@@ -1,4 +1,4 @@
-package application;
+package main;
 	
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -42,7 +42,7 @@ public class Main extends Application {
 			
 			StartWindowController controller = loader.getController();
 			controller.setStage(primaryStage);
-			
+			primaryStage.setResizable(false);
 			primaryStage.show();
 		} catch(Exception e) {
 			e.printStackTrace();

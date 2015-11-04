@@ -4,12 +4,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import patientsManagement.controller.PatientsManagementController;
@@ -19,6 +20,8 @@ public class StartWindowController implements Initializable
 {
 
 	private Stage stage;
+	
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
@@ -60,6 +63,7 @@ public class StartWindowController implements Initializable
 			{
 				controller.setStage(stage);
 			}
+			stage.setResizable(true);
 			stage.show();
 		}
 		catch(IOException e)
@@ -75,7 +79,7 @@ public class StartWindowController implements Initializable
 			stage.hide();
 			FXMLLoader loader = new FXMLLoader();
 	        loader.setLocation(getClass().getResource("/patientsManagement/view/patientsManagementView.fxml"));
-	        AnchorPane root = (AnchorPane) loader.load();
+	        StackPane root = (StackPane) loader.load();
 	        
 	        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 	
@@ -102,7 +106,9 @@ public class StartWindowController implements Initializable
 			{
 				controller.setStage(stage);
 			}
+			stage.setResizable(true);
 			stage.show();
+			controller.loadPatients();
 		}
 		catch(IOException e)
 		{
