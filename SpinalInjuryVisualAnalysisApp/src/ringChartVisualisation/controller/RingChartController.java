@@ -453,7 +453,10 @@ public class RingChartController implements Initializable
 		      	{
 		      		bmiGroupShownCheckBox.setSelected(false);
 		      		bmiGroupShownChanged();
-		      		selectedPatientOnChart.setShown(patientShownCheckBox.isSelected());
+		      		if(selectedPatientOnChart!=null)
+		      		{
+		      			selectedPatientOnChart.setShown(patientShownCheckBox.isSelected());
+		      		}
 		      		patientSelect.setValue(null);
 		      		ringChart.setChosenPatient(null);
 		      	}
