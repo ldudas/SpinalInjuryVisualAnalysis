@@ -9,7 +9,6 @@ import java.util.ResourceBundle;
 
 import auxiliary.Patient;
 import auxiliary.Sex;
-import data.PatientsCreator;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
@@ -374,19 +373,20 @@ public class RingChartController implements Initializable
 			bmiGroupPane.setDisable(false);
 			if(selectedPatientOnChart!=null)
 			{
-			patientPane.setDisable(false);
+				patientPane.setDisable(false);
 			}
 		}
 		else
 		{
 			bmiGroupPane.setDisable(true);
+			bmiGroupPane.setExpanded(false);
 			patientPane.setDisable(true);
+			patientPane.setExpanded(false);
 		}
 	}
 	
 	public void bmiGroupShownChanged()
 	{
-		System.out.println("bmiGroupShownChanged");
 		if(selectedBMIGroup.isShown()!=bmiGroupShownCheckBox.isSelected())
 		{
 			
@@ -430,7 +430,9 @@ public class RingChartController implements Initializable
 		}
 		else
 		{
+			patientPane.setExpanded(false);
 			patientPane.setDisable(true);
+			
 		}
 	}
 	
@@ -477,6 +479,8 @@ public class RingChartController implements Initializable
 		try {
 			stage.hide();
 			
+			
+			
 			if (stage.isFullScreen()) stage.setFullScreen(false);
 			
 			 FXMLLoader loader = new FXMLLoader();
@@ -500,6 +504,7 @@ public class RingChartController implements Initializable
 	         stage.setY(leftCornerY);
 	         stage.setWidth(stageWidth);
 	         stage.setHeight(stageHeight);
+	         stage.setTitle("Main menu");
 	            	
 	         Scene scene = new Scene(root);
 			 stage.setScene(scene);

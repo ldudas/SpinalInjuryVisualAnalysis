@@ -17,4 +17,9 @@ public class ConnectionEndColorPicker
 		
 		return new Color(red,green,0.0,1.0);
 	}
+	
+	public static double getMaxStrength()
+	{
+		return maxStrength;
+	}
 }

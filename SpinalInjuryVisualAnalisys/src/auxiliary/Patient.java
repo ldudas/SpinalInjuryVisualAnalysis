@@ -20,12 +20,14 @@ public class Patient implements Serializable
 	private InjuryLevel injuryLevel;
 	private double strength;
 	private double wnm;
+	private String pesel;
 	
 	private PatientOnChart patientOnChart;
 	
 	
-	public Patient(String firstName, String lastName, Sex sex, double weight, double height, InjuryLevel injuryLevel,double strength, double wnm) 
+	public Patient(String pesel,String firstName, String lastName, Sex sex, double weight, double height, InjuryLevel injuryLevel,double strength, double wnm) 
 	{
+		this.pesel = pesel;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.sex = sex;
@@ -111,17 +113,27 @@ public class Patient implements Serializable
 		this.patientOnChart = patientOnChart;
 	}
 
+	public String getPesel()
+	{
+		return pesel;
+	}
+
+	public void setPesel(String pesel)
+	{
+		this.pesel = pesel;
+	}
+
 	@Override
 	public String toString()
 	{
 		return firstName + " " + lastName;
 	}
 	
-	public void serializeToFile(String path, String fileName)
+	public void serializeToFile(String path)
 	{
 		try
 	      {
-	         FileOutputStream fileOut =new FileOutputStream(path+"/"+fileName);
+	         FileOutputStream fileOut =new FileOutputStream(path+pesel);
 	         ObjectOutputStream out = new ObjectOutputStream(fileOut);
 	         out.writeObject(this);
 	         out.close();

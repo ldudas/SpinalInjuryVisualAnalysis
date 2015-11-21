@@ -15,6 +15,7 @@ public class RingChartModel
 	public static ObservableList<Patient> getPatients()
 	{
 		  ObservableList<Patient> patients = FXCollections.observableArrayList();
+		 // PatientsCreator.getPatients();
           
           File[] files = new File("D:/patients").listFiles();
           for(File file:files)

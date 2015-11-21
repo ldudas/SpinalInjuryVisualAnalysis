@@ -25,8 +25,7 @@ public class StartWindowController implements Initializable
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
-	{
-		
+	{	
 	}
 	
 	public void goToVisualisation()
@@ -57,6 +56,7 @@ public class StartWindowController implements Initializable
 	           
 			Scene scene = new Scene(root);
 			stage.setScene(scene);
+			stage.setTitle("Visualisation");
 			
 			RingChartController controller = loader.getController();
 			if(controller.getStage()==null)
@@ -100,6 +100,7 @@ public class StartWindowController implements Initializable
 	           
 			Scene scene = new Scene(root);
 			stage.setScene(scene);
+			stage.setTitle("Patients Management");
 			
 			PatientsManagementController controller = loader.getController();
 			if(controller.getStage()==null)

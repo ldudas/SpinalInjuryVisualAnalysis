@@ -24,6 +24,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
@@ -36,6 +37,7 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import startWindow.controller.StartWindowController;
+import vars.PatientsDirectory;
 
 public class PatientsManagementController implements Initializable
 {
@@ -94,6 +96,7 @@ public class PatientsManagementController implements Initializable
 	            	
 	         Scene scene = new Scene(root);
 			 stage.setScene(scene);
+			 stage.setTitle("Main menu");
 			 
 			 StartWindowController controller = loader.getController();
 				if(controller.getStage()==null)
@@ -114,6 +117,8 @@ public class PatientsManagementController implements Initializable
 		try {
 			
 			Stage newStage = new Stage();
+			newStage.getIcons().add(new Image("/resources/ring-icon.png"));
+			newStage.setTitle("Add patinet");
 			 FXMLLoader loader = new FXMLLoader();
 	         loader.setLocation(getClass().getResource("/addEditPatient/view/addEditPatientView.fxml"));
 	         VBox root = (VBox) loader.load();
@@ -165,6 +170,8 @@ public class PatientsManagementController implements Initializable
 		Patient selectedPatient = patientsListView.getSelectionModel().getSelectedItem();
 		
 		Alert conf = new Alert(AlertType.CONFIRMATION);
+		((Stage)conf.getDialogPane().getScene().getWindow()).getIcons().add(new Image("/resources/ring-icon.png"));
+		
 		conf.setTitle("Deletion confirmation");
 		conf.setHeaderText(null);
 		conf.setContentText("Are you sure you want to delete "+selectedPatient+"?");
@@ -173,10 +180,11 @@ public class PatientsManagementController implements Initializable
 		
 		if (result.get() == ButtonType.OK)
 		{
-			File file = new File("D:/patients/"+selectedPatient.toString());
+			File file = new File(PatientsDirectory.getPatientsPath()+selectedPatient.getPesel());
 	    	
 			if(file.delete()){
 				Alert alert = new Alert(AlertType.INFORMATION);
+				((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("/resources/ring-icon.png"));
 				alert.setTitle("Success");
 				alert.setHeaderText(null);
 				alert.setContentText(selectedPatient.toString()+" deleted.");
@@ -186,6 +194,8 @@ public class PatientsManagementController implements Initializable
 				alert.showAndWait();
 			}else{
 				Alert alert = new Alert(AlertType.ERROR);
+				((Stage)alert.getDialogPane().getScene().getWindow()).getIcons().add(new Image("/resources/ring-icon.png"));
+				
 				alert.setTitle("Error");
 				alert.setHeaderText(null);
 				alert.setContentText(selectedPatient.toString()+" couldn't be deleted.");
@@ -203,6 +213,8 @@ public class PatientsManagementController implements Initializable
 		try {
 			
 			Stage newStage = new Stage();
+			newStage.setTitle("Edit Patient");
+			newStage.getIcons().add(new Image("/resources/ring-icon.png"));
 			 FXMLLoader loader = new FXMLLoader();
 	         loader.setLocation(getClass().getResource("/addEditPatient/view/addEditPatientView.fxml"));
 	         VBox root = (VBox) loader.load();
@@ -293,7 +305,14 @@ public class PatientsManagementController implements Initializable
 
 	            ObservableList<Patient> patients = FXCollections.observableArrayList();
 	            
-	            File[] files = new File("D:/patients").listFiles();
+	            File filep = new File(PatientsDirectory.getPatientsPath());
+	            
+	            if(!filep.isDirectory())
+	            {
+	            	filep.mkdirs();
+	            }
+	            
+	            File[] files = filep.listFiles();
 	            int index = 0;
 	            for(File file:files)
 	            {
