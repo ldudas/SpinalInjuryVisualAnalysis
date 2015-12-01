@@ -50,8 +50,9 @@ public class AddEditPatientController implements Initializable
 	private TextField strenghtTextField;
 	@FXML
 	private TextField wnmTextField;
-	
+	@FXML
 	private ListView<Patient> patientsListView;
+	
 	private Patient editedPatient;
 	
 	

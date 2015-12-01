@@ -246,7 +246,7 @@ public class BMIGroup extends ChartGroup
 		{
 			 if(value)
 	         {
-	       	  	System.out.println("show bmigroup");
+
 				 ringChart.getChartChildren().addAll(menRegion,womenRegion,region,textDotRegion,text);
 			  	  
 				 

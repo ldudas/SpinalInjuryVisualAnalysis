@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import auxiliary.Patient;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import vars.PatientsDirectory;
 
 public class RingChartModel
 {
@@ -17,7 +18,7 @@ public class RingChartModel
 		  ObservableList<Patient> patients = FXCollections.observableArrayList();
 		 // PatientsCreator.getPatients();
           
-          File[] files = new File("D:/patients").listFiles();
+          File[] files = new File(PatientsDirectory.getPatientsPath()).listFiles();
           for(File file:files)
           {
           	try
