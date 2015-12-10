@@ -54,7 +54,7 @@ public class RingChart extends Chart
 	private static double radiusMultiplierInnerInjuryLevel = 0.9;
 	private static double injuryLevelBmiGap = 1;
 	private static double radiusMultiplierInnerBmi = 0.9;
-	private static double deltaWNM = 0.04;
+	private static double deltaWNM = 0.011;
 	private static double patientRegionRadius = 4;
 	private static double patientsGap = patientRegionRadius*1.5;
 	

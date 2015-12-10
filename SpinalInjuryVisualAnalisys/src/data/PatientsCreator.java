@@ -60,6 +60,9 @@ public class PatientsCreator
 			patient.serializeToFile("D:/patients/");
 		}
 		*/
+		
+		//pierwszy zestaw
+		/*
 		return FXCollections.observableArrayList
 	    		 (
 	    				//C1 mê¿czyŸni
@@ -103,7 +106,7 @@ public class PatientsCreator
 	    				 new Patient("323456544","Magdalena", "Wiernicka", Sex.WOMAN, 75, 1.9, InjuryLevel.C3, 93, 0.88), //20,7
 	    				 new Patient("123123123","Barbara", "Radkowska", Sex.WOMAN, 95, 1.9, InjuryLevel.C3, 23, 0.4), //26,3
 	    				 new Patient("555566556","Ewa", "Nowak", Sex.WOMAN, 125, 1.9, InjuryLevel.C3, 65, 0.9) //34,6
-	    		 /*
+	    		 
 	    		//C4 mê¿czyŸni
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C4, 10, 0.1), //18
 	    		 new Patient("Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C4, 10, 0.1), //20,7
@@ -404,7 +407,95 @@ public class PatientsCreator
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.S5, 10, 0.1), //20,7
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.S5, 10, 0.1), //26,3
 	    		 new Patient("Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.S5, 10, 0.1) //34,6
-	    			*/	 );
+	    				 );*/
+		
+		return FXCollections.observableArrayList
+	    		 ( 
+	    				 //c5
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C5, 8, 0.02), //18
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.C5, 8, 0.02), //18
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C5, 10, 0.03), //20,7
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.C5, 10, 0.03), //20,7
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.C5, 60, 0.04), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C5, 17, 0.55), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C5, 17, 0.05), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C5, 17, 0.05), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.C5, 17, 0.05), //34,6
+	    				 
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.C5, 3, 0.12), //18
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C5, 4, 0.13), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.C5, 4, 0.13), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.C5, 70, 0.14), //26,3
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C5, 10, 0.15), //34,6
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.C5, 10, 0.15), //34,6
+	    	    		 
+	    	    		 //t5
+	    	    		 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.T7, 28, 0.22), //18
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.T7, 30, 0.23), //20,7
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.T7, 33, 0.24), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.T7, 90, 0.25), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.T7, 90, 0.25), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.T7, 90, 0.25), //34,6
+	    				 
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.T7, 23, 0.32), //18
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.T7, 23, 0.32), //18
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.T7, 23, 0.32), //18
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.T7, 70, 0.33), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.T7, 27, 0.34), //26,3
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.T7, 27, 0.34), //26,3
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.T7, 30, 0.35), //34,6
+	    	    		 
+	    	    		 
+	    	    		//t10
+	    	    		 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.T10, 48, 0.42), //18
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.T10, 50, 0.43), //20,7
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.T10, 53, 0.44), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.T10, 53, 0.44), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.T10, 57, 0.45), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.T10, 57, 0.45), //34,6
+	    				 
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.T10, 43, 0.52), //18
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.T10, 44, 0.53), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.T10, 47, 0.54), //26,3
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.T10, 47, 0.60), //26,3
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.T10, 97, 0.55), //34,6
+	    	    		
+	    	    		 //l2
+	    	    		 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.L2, 68, 0.62), //18
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.L2, 70, 0.63), //20,7
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.L2, 70, 0.63), //20,7
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.L2, 70, 0.63), //20,7
+	    				// new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.L2, 73, 0.64), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.L2, 77, 0.65), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.L2, 77, 0.65), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.L2, 77, 0.65), //34,6
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.L2, 77, 0.65), //34,6
+	    				 
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.L2, 63, 0.72), //18
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.L2, 20, 0.73), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.L2, 67, 0.74), //26,3
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.L2, 67, 0.74), //26,3
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.L2, 70, 0.75), //34,6
+	    	    		 
+	    	    		 //l5
+	    	    		 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 65, 1.9, InjuryLevel.L5, 88, 0.82), //18
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 75, 1.9, InjuryLevel.L5, 90, 0.83), //20,7
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.L5, 93, 0.84), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.L5, 93, 0.84), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 95, 1.9, InjuryLevel.L5, 93, 0.84), //26,3
+	    				 new Patient("11111111111","Adam", "Kowalski", Sex.MAN, 125, 1.9, InjuryLevel.L5, 97, 0.85), //34,6
+	    				 
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.L5, 50, 0.92), //18
+	    				 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 65, 1.9, InjuryLevel.L5, 50, 0.92), //18
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.L5, 84, 0.93), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.L5, 84, 0.93), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.L5, 84, 0.93), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.L5, 84, 0.93), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 75, 1.9, InjuryLevel.L5, 84, 0.93), //20,7
+	    	    		 new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 95, 1.9, InjuryLevel.L5, 70, 0.94) //26,3
+	    	    		// new Patient("11111111111","Anna", "Kowalska", Sex.WOMAN, 125, 1.9, InjuryLevel.L5, 90, 0.95) //34,6
+	    				 
+	    				 );
 		
 	}
 }

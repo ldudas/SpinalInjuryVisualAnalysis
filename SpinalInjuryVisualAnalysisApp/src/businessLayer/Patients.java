@@ -1,15 +1,13 @@
-package ringChartVisualisation.model;
+package businessLayer;
 
 import auxiliary.Patient;
-import businessLayer.Patients;
+import dataAccessLayer.PatientsDAO;
 import javafx.collections.ObservableList;
 
-public class RingChartModel
+public class Patients
 {
-
 	public static ObservableList<Patient> getPatients()
 	{
-		 return Patients.getPatients();
+		return PatientsDAO.getPatients();
 	}
-	
 }
